@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALLBINOX METAIS — A força do inox em cada detalhe</title>
+<meta name="description" content="Indústria nacional de lixeiras e utilitários em aço inox. 288 produtos de linha para revendas, facilities, hotelaria, saúde e projetos corporativos. Fábrica em Suzano/SP.">
+<meta property="og:title" content="ALLBINOX METAIS — Soluções em aço inox">
+<meta property="og:description" content="Lixeiras, coleta seletiva, bituqueiras e utilitários em aço inox. Atendimento B2B para revendedores, facilities e suprimentos.">
+<meta property="og:image" content="assets/showroom.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M8 52 L26 14 L34 30' fill='none' stroke='%237C3AED' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M30 52 L52 14 M34 14 L56 52' fill='none' stroke='%23C9CAD1' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+<script src="https://unpkg.com/split-type"></script>
+
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#0B0A0E;
+  --bg-elevated:#121016;
+  --surface:#18151F;
+  --border:#262130;
+  --text:#F4F2F7;
+  --muted:#9B91AD;
+  --violet:#7C3AED;
+  --violet-light:#A855F7;
+  --chrome:#C9CAD1;
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --font-display:"Fraunces",serif;
+  --font-body:"Space Grotesk",sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-weight:300;
+  font-size:clamp(1rem,1.5vw,1.125rem);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--violet);color:#fff}
+img{max-width:100%;display:block;background:linear-gradient(135deg,var(--surface) 0%,var(--bg-elevated) 100%)}
+
+/* grão sutil de cinema */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2000;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+}
+
+/* ============ UTILITÁRIOS DE TEXTO ============ */
+.chrome-text{
+  background:linear-gradient(105deg,#EDEDF1 0%,#96959F 28%,#FAFAFC 50%,#83828E 72%,#D9D8DF 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.violet-text{
+  background:linear-gradient(105deg,#A855F7 0%,#7C3AED 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.label{
+  font-family:var(--font-body);font-size:.75rem;font-weight:500;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+}
+.label .paren{color:var(--violet-light)}
+.serif-i{font-family:var(--font-display);font-style:italic;font-weight:300}
+
+.container{width:min(1280px,92vw);margin-inline:auto}
+
+section{padding-block:60px;position:relative}
+@media(min-width:768px){section{padding-block:96px}}
+@media(min-width:1024px){section{padding-block:140px}}
+
+/* ============ CURSOR (desktop) ============ */
+.cursor-dot{
+  position:fixed;top:0;left:0;width:10px;height:10px;border-radius:50%;
+  background:var(--violet-light);pointer-events:none;z-index:3000;
+  transform:translate(-50%,-50%);mix-blend-mode:difference;display:none;
+}
+@media(hover:hover) and (pointer:fine){.cursor-dot{display:block}}
+
+/* ============ BARRA DE PROGRESSO ============ */
+.scroll-progress{
+  position:fixed;top:0;left:0;height:2px;width:100%;z-index:1500;
+  background:linear-gradient(90deg,var(--violet),var(--violet-light));
+  transform-origin:0 50%;transform:scaleX(0);
+}
+
+/* ============ NAV ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:20px 0;
+  transition:background .4s var(--ease),box-shadow .4s var(--ease),padding .4s var(--ease);
+}
+.nav.scrolled{background:rgba(11,10,14,.82);backdrop-filter:blur(14px);padding:12px 0;box-shadow:0 1px 0 var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo img{height:30px;width:auto;background:none}
+.nav-links{display:none;align-items:center;gap:32px}
+@media(min-width:1024px){.nav-links{display:flex}}
+.nav-link{
+  color:var(--muted);text-decoration:none;font-size:.8125rem;font-weight:400;
+  letter-spacing:.08em;text-transform:uppercase;position:relative;
+  transition:color .3s var(--ease);
+}
+.nav-link::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:1px;width:100%;
+  background:var(--violet-light);transform:scaleX(0);transform-origin:100% 50%;
+  transition:transform .4s var(--ease);
+}
+.nav-link:hover{color:var(--text)}
+.nav-link:hover::after{transform:scaleX(1);transform-origin:0 50%}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 22px;border:1px solid var(--border);border-radius:100px;
+  color:var(--text);text-decoration:none;font-size:.8125rem;font-weight:500;
+  letter-spacing:.06em;text-transform:uppercase;
+  transition:border-color .3s var(--ease),background .3s var(--ease),transform .3s var(--ease);
+}
+.nav-cta:hover{border-color:var(--violet);background:rgba(124,58,237,.12);transform:translateY(-2px)}
+@media(max-width:640px){
+  .nav-cta{padding:8px 14px;font-size:.6875rem;letter-spacing:.04em;white-space:nowrap}
+  .nav-logo img{height:24px}
+}
+.nav-burger{
+  display:flex;flex-direction:column;gap:5px;background:none;border:0;cursor:pointer;padding:8px;
+}
+@media(min-width:1024px){.nav-burger{display:none}}
+.nav-burger span{width:26px;height:1.5px;background:var(--text);transition:transform .35s var(--ease),opacity .35s var(--ease)}
+.nav-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.nav-burger.open span:nth-child(2){opacity:0}
+.nav-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+.mobile-menu{
+  position:fixed;inset:0;z-index:900;background:rgba(11,10,14,.97);backdrop-filter:blur(10px);
+  display:flex;flex-direction:column;justify-content:center;padding:0 8vw;gap:8px;
+  opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
+}
+.mobile-menu.open{opacity:1;pointer-events:auto}
+.mobile-menu a{
+  color:var(--text);text-decoration:none;font-family:var(--font-display);
+  font-size:clamp(2rem,8vw,3rem);font-weight:300;padding:10px 0;
+  border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;
+}
+.mobile-menu a em{font-size:.9rem;color:var(--muted);font-family:var(--font-body);font-style:normal;letter-spacing:.1em}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
+  padding-top:120px;padding-bottom:48px;overflow:hidden;position:relative;
+}
+.hero-bg{
+  position:absolute;inset:-2% -2% -2% -2%;z-index:-1;
+  background:
+    radial-gradient(58% 42% at 78% 30%,rgba(124,58,237,.17) 0%,transparent 65%),
+    radial-gradient(40% 34% at 12% 82%,rgba(168,85,247,.08) 0%,transparent 70%),
+    var(--bg);
+}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:end}
+@media(min-width:1024px){.hero-grid{grid-template-columns:1.55fr 1fr;gap:64px}}
+.hero-headline{font-weight:300;line-height:.98;letter-spacing:-.02em}
+.hero-mask{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.16em}
+.hero-line{display:block;overflow:visible;will-change:transform}
+.hero-l1{font-family:var(--font-body);font-weight:700;font-size:clamp(3rem,11vw,9.5rem);text-transform:uppercase;letter-spacing:-.03em}
+.hero-l2{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(2.6rem,9.5vw,8.25rem);margin:.02em 0 .04em .04em}
+.hero-l3{font-family:var(--font-display);font-weight:300;font-size:clamp(2rem,6.4vw,5.5rem);color:var(--muted)}
+.hero-l3 .num{font-family:var(--font-body);font-weight:300;font-size:.5em;vertical-align:super;color:var(--violet-light)}
+.hero-l4{font-family:var(--font-body);font-weight:700;font-size:clamp(3rem,11vw,9.5rem);text-transform:uppercase;letter-spacing:-.03em}
+.hero-sub{
+  margin-top:40px;max-width:520px;color:var(--muted);
+  display:flex;flex-direction:column;gap:24px;
+}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 32px;border-radius:100px;text-decoration:none;
+  font-family:var(--font-body);font-size:.9375rem;font-weight:500;letter-spacing:.04em;
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease),background .35s var(--ease),border-color .35s var(--ease),color .35s var(--ease);
+  will-change:transform;
+}
+.btn-primary{
+  background:linear-gradient(105deg,var(--violet) 0%,var(--violet-light) 100%);
+  color:#fff;box-shadow:0 8px 32px rgba(124,58,237,.35);
+}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 14px 44px rgba(124,58,237,.5)}
+.btn-ghost{border:1px solid var(--border);color:var(--text)}
+.btn-ghost:hover{border-color:var(--chrome);transform:translateY(-3px)}
+.btn svg{width:18px;height:18px;flex:0 0 auto}
+
+.hero-visual{position:relative;display:none}
+@media(min-width:1024px){.hero-visual{display:block}}
+.hero-photo{
+  border-radius:200px 200px 24px 24px;overflow:hidden;
+  border:1px solid var(--border);
+  aspect-ratio:9/13.4;max-height:64vh;margin-left:auto;width:min(340px,100%);
+  position:relative;
+}
+.hero-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.06)}
+.hero-photo::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,10,14,0) 55%,rgba(11,10,14,.55) 100%);
+}
+.hero-photo-caption{
+  position:absolute;bottom:20px;left:24px;right:24px;z-index:2;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.hero-meta{
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  margin-top:56px;padding-top:24px;border-top:1px solid var(--border);
+}
+.hero-meta .label{display:flex;gap:8px;align-items:center}
+.scroll-hint{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}
+.scroll-hint svg{width:14px;height:14px;animation:hintY 2.2s var(--ease) infinite}
+@keyframes hintY{0%,100%{transform:translateY(-2px);opacity:.5}50%{transform:translateY(3px);opacity:1}}
+
+/* ============ MARQUEE DE PALAVRAS ============ */
+.word-marquee{
+  border-block:1px solid var(--border);padding:22px 0;overflow:hidden;white-space:nowrap;
+  background:var(--bg-elevated);
+}
+.word-track{display:inline-flex;gap:0;animation:marq 36s linear infinite;will-change:transform}
+.word-marquee:hover .word-track{animation-play-state:paused}
+.word-track span{
+  font-family:var(--font-display);font-weight:300;font-size:clamp(1.25rem,2.6vw,2rem);
+  color:var(--muted);padding:0 28px;display:inline-flex;align-items:center;gap:28px;
+}
+.word-track span::after{content:"×";color:var(--violet);font-size:.7em}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ============ MANIFESTO (pin + scrub) ============ */
+.manifesto{background:var(--bg)}
+.manifesto-inner{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:48px}
+.manifesto-text{
+  font-family:var(--font-display);font-weight:300;
+  font-size:clamp(1.6rem,3.6vw,3.25rem);line-height:1.32;letter-spacing:-.01em;
+  max-width:1080px;
+}
+.manifesto-text .word{color:#2E2939;transition:none}
+.manifesto-text .accent-w{font-style:italic}
+.manifesto-badge{display:flex;align-items:center;gap:16px}
+.badge-pill{
+  display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:100px;
+  background:linear-gradient(105deg,var(--violet),var(--violet-light));color:#fff;
+  font-size:.8125rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+}
+
+/* ============ NÚMEROS ============ */
+.numbers{background:var(--bg-elevated);border-block:1px solid var(--border)}
+.numbers-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:24px;margin-bottom:64px}
+.section-title{
+  font-family:var(--font-display);font-weight:300;
+  font-size:clamp(1.75rem,4vw,3.5rem);line-height:1.1;letter-spacing:-.015em;max-width:640px;
+}
+.numbers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--border)}
+@media(min-width:900px){.numbers-grid{grid-template-columns:repeat(4,1fr)}}
+.num-cell{
+  padding:36px 28px 40px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;
+  transition:background .4s var(--ease);
+}
+.num-cell:hover{background:rgba(124,58,237,.06)}
+.num-cell::after{
+  content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;
+  background:linear-gradient(90deg,var(--violet),var(--violet-light));
+  transform:scaleX(0);transform-origin:0 50%;transition:transform .5s var(--ease);
+}
+.num-cell:hover::after{transform:scaleX(1)}
+.num-value{
+  font-family:var(--font-body);font-weight:300;font-size:clamp(2.75rem,6vw,4.75rem);line-height:1;
+  display:flex;align-items:baseline;gap:4px;
+}
+.num-value .suf{font-size:.42em;color:var(--violet-light);font-weight:400}
+.num-label{color:var(--muted);font-size:.9375rem;line-height:1.45}
+
+/* ============ LINHAS DE PRODUTO ============ */
+.lines-section .section-head{margin-bottom:72px;display:flex;flex-direction:column;gap:16px}
+.line-rows{border-top:1px solid var(--border);position:relative}
+.line-row{
+  display:grid;grid-template-columns:auto 1fr;gap:20px 28px;align-items:baseline;
+  padding:34px 8px;border-bottom:1px solid var(--border);cursor:pointer;position:relative;
+  text-decoration:none;color:inherit;
+  transition:background .4s var(--ease),padding-left .4s var(--ease);
+}
+@media(min-width:900px){.line-row{grid-template-columns:90px 1.1fr 1.6fr auto;align-items:center}}
+.line-row:hover{background:rgba(124,58,237,.05);padding-left:20px}
+.line-index{font-family:var(--font-body);font-weight:300;font-size:.9rem;color:var(--violet-light);letter-spacing:.1em}
+.line-name{
+  font-family:var(--font-display);font-weight:300;font-size:clamp(1.6rem,3.4vw,2.9rem);
+  line-height:1.05;letter-spacing:-.01em;transition:color .3s var(--ease);
+}
+.line-row:hover .line-name{color:var(--violet-light)}
+.line-desc{color:var(--muted);font-size:.95rem;max-width:480px;grid-column:2}
+@media(min-width:900px){.line-desc{grid-column:auto}}
+.line-count{
+  font-size:.8125rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:10px;grid-column:2;
+}
+@media(min-width:900px){.line-count{grid-column:auto;justify-self:end}}
+.line-count svg{width:16px;height:16px;transition:transform .35s var(--ease)}
+.line-row:hover .line-count svg{transform:translateX(5px)}
+.line-preview{
+  position:absolute;width:280px;aspect-ratio:3/4;border-radius:16px;overflow:hidden;
+  pointer-events:none;z-index:50;opacity:0;top:0;left:0;
+  border:1px solid var(--border);box-shadow:0 24px 80px rgba(0,0,0,.55);
+  display:none;
+}
+@media(hover:hover) and (pointer:fine) and (min-width:1024px){.line-preview{display:block}}
+.line-preview img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .35s var(--ease)}
+.line-preview img.on{opacity:1}
+.line-thumbs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:40px}
+@media(min-width:1024px){.line-thumbs{display:none}}
+.line-thumbs figure{border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative;aspect-ratio:4/5}
+.line-thumbs img{width:100%;height:100%;object-fit:cover}
+.line-thumbs figcaption{
+  position:absolute;left:12px;bottom:10px;font-size:.6875rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text);
+  text-shadow:0 1px 8px rgba(0,0,0,.8);
+}
+
+/* ============ VITRINE ============ */
+.vitrine{border-top:1px solid var(--border)}
+.vit-head{display:flex;flex-direction:column;gap:16px;margin-bottom:48px}
+.vit-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px}
+.vit-chip{
+  padding:11px 20px;border-radius:100px;border:1px solid var(--border);
+  background:none;color:var(--muted);font-family:var(--font-body);font-size:.8438rem;font-weight:400;
+  letter-spacing:.04em;cursor:pointer;
+  transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease),transform .3s var(--ease);
+}
+.vit-chip:hover{color:var(--text);border-color:var(--chrome);transform:translateY(-2px)}
+.vit-chip.active{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(105deg,var(--violet),var(--violet-light));
+}
+.vit-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+}
+@media(min-width:700px){.vit-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1100px){.vit-grid{grid-template-columns:repeat(4,1fr)}}
+.vit-card{
+  position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);
+  aspect-ratio:1/1;display:block;text-decoration:none;
+  transition:border-color .4s var(--ease),transform .4s var(--ease);
+}
+.vit-card:hover{border-color:var(--violet);transform:translateY(-4px)}
+.vit-card img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .7s var(--ease),filter .7s var(--ease);
+}
+.vit-card:hover img{transform:scale(1.05);filter:brightness(.92)}
+.vit-card figcaption{
+  position:absolute;inset-inline:0;bottom:0;padding:36px 16px 14px;
+  background:linear-gradient(180deg,transparent 0%,rgba(11,10,14,.82) 78%);
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+}
+.vit-card figcaption b{
+  color:var(--text);font-weight:500;font-size:.875rem;letter-spacing:.01em;
+}
+.vit-card figcaption span{
+  color:var(--muted);font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
+}
+.vit-foot{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;
+  margin-top:40px;padding-top:24px;border-top:1px solid var(--border);
+}
+.vit-foot p{color:var(--muted);font-size:.9375rem;max-width:560px}
+
+/* ============ SEGMENTOS ============ */
+.segments{background:var(--bg-elevated);border-block:1px solid var(--border)}
+.seg-head{display:flex;flex-direction:column;gap:16px;margin-bottom:56px}
+.seg-tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:48px}
+.seg-tab{
+  padding:12px 22px;border-radius:100px;border:1px solid var(--border);
+  background:none;color:var(--muted);font-family:var(--font-body);font-size:.875rem;font-weight:400;
+  letter-spacing:.04em;cursor:pointer;
+  transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease),transform .3s var(--ease);
+}
+.seg-tab:hover{color:var(--text);border-color:var(--chrome);transform:translateY(-2px)}
+.seg-tab.active{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(105deg,var(--violet),var(--violet-light));
+}
+.seg-panel{display:none;grid-template-columns:1fr;gap:48px;align-items:start}
+.seg-panel.active{display:grid}
+@media(min-width:1024px){.seg-panel{grid-template-columns:1.2fr 1fr}}
+.seg-title{
+  font-family:var(--font-display);font-weight:300;font-size:clamp(1.6rem,3.2vw,2.75rem);
+  line-height:1.15;margin-bottom:20px;letter-spacing:-.01em;
+}
+.seg-copy{color:var(--muted);max-width:560px;margin-bottom:28px}
+.seg-list{list-style:none;display:flex;flex-direction:column}
+.seg-list li{
+  display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--border);
+  font-size:.975rem;color:var(--text);
+}
+.seg-list li:first-child{border-top:1px solid var(--border)}
+.seg-list svg{width:20px;height:20px;flex:0 0 auto;color:var(--muted);opacity:.8;margin-top:2px}
+.seg-side{
+  border:1px solid var(--border);border-radius:20px;padding:32px;
+  background:var(--bg);display:flex;flex-direction:column;gap:20px;
+}
+.seg-side .label{margin-bottom:4px}
+.seg-side-lines{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:8px 16px;border-radius:100px;border:1px solid var(--border);
+  font-size:.8125rem;color:var(--text);letter-spacing:.02em;
+  transition:border-color .3s var(--ease);
+}
+.chip:hover{border-color:var(--violet-light)}
+.seg-side .btn{align-self:flex-start;margin-top:8px}
+
+/* ============ MARCA / SHOWROOM ============ */
+.brand-section{overflow:hidden}
+.brand-grid{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
+@media(min-width:1024px){.brand-grid{grid-template-columns:1fr 1fr;gap:80px}}
+.brand-photo{
+  border-radius:24px;overflow:hidden;border:1px solid var(--border);
+  aspect-ratio:4/3.4;position:relative;
+}
+.brand-photo img{width:100%;height:112%;object-fit:cover;will-change:transform}
+.brand-copy{display:flex;flex-direction:column;gap:24px}
+.brand-copy .section-title em{font-style:italic;font-weight:300}
+.brand-copy p{color:var(--muted);max-width:520px}
+.brand-facts{display:flex;flex-direction:column;margin-top:8px}
+.brand-fact{
+  display:flex;justify-content:space-between;gap:24px;padding:14px 0;
+  border-bottom:1px solid var(--border);font-size:.9375rem;
+}
+.brand-fact:first-child{border-top:1px solid var(--border)}
+.brand-fact b{font-weight:500;letter-spacing:.02em}
+.brand-fact span{color:var(--muted);text-align:right}
+
+/* ============ POSTS MARQUEE ============ */
+.wall{padding-block:60px;border-block:1px solid var(--border);background:var(--bg-elevated);overflow:hidden}
+@media(min-width:1024px){.wall{padding-block:96px}}
+.wall-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:48px}
+.wall-track-clip{overflow:hidden;margin-inline:calc(50% - 50vw);}
+.wall-track{display:flex;gap:24px;width:max-content;animation:marq 48s linear infinite;padding-inline:24px;will-change:transform}
+.wall-track-clip:hover .wall-track{animation-play-state:paused}
+.wall-card{
+  width:min(300px,72vw);border-radius:18px;overflow:hidden;border:1px solid var(--border);
+  flex:0 0 auto;position:relative;
+  transition:transform .45s var(--ease),border-color .45s var(--ease);
+}
+.wall-card:hover{transform:translateY(-8px) rotate(-.5deg);border-color:var(--violet)}
+.wall-card img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:top}
+.wall-card.tall img{aspect-ratio:9/12}
+
+/* ============ DIFERENCIAIS ============ */
+.why-grid{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--border)}
+@media(min-width:768px){.why-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1100px){.why-grid{grid-template-columns:repeat(4,1fr)}}
+.why-cell{
+  padding:40px 28px 48px;border-bottom:1px solid var(--border);
+  display:flex;flex-direction:column;gap:18px;position:relative;
+  transition:background .4s var(--ease);
+}
+@media(min-width:768px){.why-cell{border-right:1px solid var(--border)}}
+.why-cell:hover{background:rgba(124,58,237,.05)}
+.why-cell svg{width:22px;height:22px;color:var(--muted);opacity:.75}
+.why-cell h3{font-family:var(--font-display);font-weight:400;font-size:1.375rem;letter-spacing:-.01em}
+.why-cell p{color:var(--muted);font-size:.9375rem}
+.why-cell .idx{position:absolute;top:40px;right:28px;font-size:.75rem;color:var(--muted);letter-spacing:.14em}
+
+/* ============ CTA FINAL ============ */
+.cta-final{position:relative;overflow:hidden}
+.cta-bg{
+  position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(52% 60% at 50% 108%,rgba(124,58,237,.28) 0%,transparent 70%),
+    var(--bg);
+}
+.cta-inner{display:grid;grid-template-columns:1fr;gap:56px}
+@media(min-width:1024px){.cta-inner{grid-template-columns:1.15fr 1fr;gap:96px}}
+.cta-title{
+  font-family:var(--font-display);font-weight:300;
+  font-size:clamp(2.25rem,6vw,5rem);line-height:1.04;letter-spacing:-.02em;
+}
+.cta-left p{color:var(--muted);margin-top:24px;max-width:480px}
+.cta-contacts{display:flex;flex-direction:column;margin-top:40px}
+.cta-contact{
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding:16px 4px;border-bottom:1px solid var(--border);
+  color:var(--text);text-decoration:none;font-size:.9375rem;
+  transition:padding-left .35s var(--ease),color .35s var(--ease);
+}
+.cta-contact:first-child{border-top:1px solid var(--border)}
+.cta-contact:hover{padding-left:14px;color:var(--violet-light)}
+.cta-contact span:last-child{color:var(--muted);font-size:.8125rem;letter-spacing:.1em;text-transform:uppercase}
+.quote-card{
+  border:1px solid var(--border);border-radius:24px;padding:36px 32px 40px;
+  background:rgba(18,16,22,.85);backdrop-filter:blur(8px);
+  display:flex;flex-direction:column;gap:18px;
+}
+.quote-card h3{font-family:var(--font-display);font-weight:400;font-size:1.5rem;letter-spacing:-.01em}
+.quote-card p.small{color:var(--muted);font-size:.875rem;margin-top:-8px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea{
+  background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;color:var(--text);font-family:var(--font-body);font-size:.9375rem;font-weight:300;
+  outline:none;transition:border-color .3s var(--ease),box-shadow .3s var(--ease);
+  appearance:none;-webkit-appearance:none;
+}
+.field select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239B91AD' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+}
+.field textarea{resize:vertical;min-height:88px}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--violet);box-shadow:0 0 0 3px rgba(124,58,237,.18)}
+.quote-card .btn{margin-top:6px;width:100%}
+.quote-note{font-size:.75rem;color:var(--muted);text-align:center}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--bg-elevated)}
+.footer-thanks{
+  font-family:var(--font-display);font-weight:300;text-align:center;
+  font-size:clamp(1.75rem,5.4vw,4.25rem);letter-spacing:-.015em;line-height:1.08;
+  margin-bottom:64px;
+}
+.footer-logo{display:flex;justify-content:center;margin-bottom:56px}
+.footer-logo img{height:72px;width:auto;background:none}
+.footer-grid{
+  display:grid;grid-template-columns:1fr;gap:32px;padding-top:40px;border-top:1px solid var(--border);
+  font-size:.875rem;color:var(--muted);
+}
+@media(min-width:768px){.footer-grid{grid-template-columns:repeat(3,1fr)}}
+.footer-col{display:flex;flex-direction:column;gap:12px}
+.footer-col b{color:var(--text);font-weight:500;letter-spacing:.08em;text-transform:uppercase;font-size:.75rem;margin-bottom:6px}
+.footer-col a{color:var(--muted);text-decoration:none;transition:color .3s var(--ease)}
+.footer-col a:hover{color:var(--violet-light)}
+.footer-bottom{
+  margin-top:56px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
+  font-size:.8125rem;color:var(--muted);
+}
+.footer-bottom .sig{color:var(--text)}
+.footer-bottom .sig .violet-text{font-weight:500}
+
+/* WhatsApp flutuante */
+.wpp-float{
+  position:fixed;right:22px;bottom:22px;z-index:1200;width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,#25D366,#1FAF54);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 10px 32px rgba(37,211,102,.4);
+  transition:transform .35s var(--ease),box-shadow .35s var(--ease);
+}
+.wpp-float:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 16px 44px rgba(37,211,102,.55)}
+.wpp-float svg{width:28px;height:28px;fill:#fff}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="nav">
+  <div class="container nav-inner">
+    <a href="#" class="nav-logo" aria-label="ALLBINOX METAIS — início">
+      <img src="assets/logo-wordmark.png" alt="ALLBINOX METAIS">
+    </a>
+    <nav class="nav-links" aria-label="Navegação principal">
+      <a class="nav-link" href="#linhas">Linhas</a>
+      <a class="nav-link" href="#vitrine">Vitrine</a>
+      <a class="nav-link" href="#segmentos">Segmentos</a>
+      <a class="nav-link" href="#marca">A Marca</a>
+      <a class="nav-link" href="#contato">Contato</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px">
+      <a class="nav-cta" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20ALLBINOX%20e%20quero%20falar%20com%20o%20comercial." target="_blank" rel="noopener">Falar com o comercial</a>
+      <button class="nav-burger" id="burger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#linhas"><span>Linhas</span><em>01</em></a>
+  <a href="#vitrine"><span>Vitrine</span><em>02</em></a>
+  <a href="#segmentos"><span>Segmentos</span><em>03</em></a>
+  <a href="#marca"><span>A Marca</span><em>04</em></a>
+  <a href="#contato"><span>Contato</span><em>05</em></a>
+</div>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="topo">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <p class="label" style="margin-bottom:28px"><span class="paren">(</span>&nbsp;Soluções profissionais em aço inox&nbsp;<span class="paren">)</span></p>
+        <h1 class="hero-headline">
+          <span class="hero-mask"><span class="hero-line hero-l1 chrome-text">A força</span></span>
+          <span class="hero-mask"><span class="hero-line hero-l2 violet-text">do inox</span></span>
+          <span class="hero-mask"><span class="hero-line hero-l3">em cada<span class="num">*</span></span></span>
+          <span class="hero-mask"><span class="hero-line hero-l4 chrome-text">Detalhe</span></span>
+        </h1>
+        <div class="hero-sub">
+          <p>Lixeiras, coleta seletiva, bituqueiras e utilitários em aço inox — projetados e fabricados no Brasil para revendas, facilities, hotelaria, saúde e projetos corporativos que não aceitam o básico.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20ALLBINOX%20e%20quero%20um%20or%C3%A7amento." target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 9.88 9.89c0 5.45-4.43 9.88-9.89 9.88m8.4-18.28A11.82 11.82 0 0 0 12.04 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.4"/></svg>
+              Solicitar orçamento
+            </a>
+            <a class="btn btn-ghost" href="#linhas">Explorar as linhas</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <figure class="hero-photo">
+          <img src="assets/lixeira-pedal.jpg" alt="Lixeira de pedal em aço inox polido em ambiente de alto padrão" fetchpriority="high" decoding="async">
+          <figcaption class="hero-photo-caption">
+            <span class="label" style="color:var(--text)">Linha Premium</span>
+            <span class="label">Inox polido</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <span class="label">Fábrica própria — Suzano · SP</span>
+      <span class="scroll-hint">Role para explorar
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+      </span>
+      <span class="label" style="display:none" data-show-desktop>288 produtos de linha</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE PALAVRAS ============ -->
+<div class="word-marquee" aria-hidden="true">
+  <div class="word-track">
+    <span>Lixeiras Inox</span><span>Coleta Seletiva</span><span>Bituqueiras</span><span>Porta Guarda-Chuvas</span><span>Coletores de Pilhas</span><span>Linha Externa</span><span>Pedal · Aro · Basculante</span><span>3 a 150 litros</span>
+    <span>Lixeiras Inox</span><span>Coleta Seletiva</span><span>Bituqueiras</span><span>Porta Guarda-Chuvas</span><span>Coletores de Pilhas</span><span>Linha Externa</span><span>Pedal · Aro · Basculante</span><span>3 a 150 litros</span>
+  </div>
+</div>
+
+<!-- ============ MANIFESTO ============ -->
+<section class="manifesto" id="manifesto">
+  <div class="container manifesto-inner">
+    <p class="label"><span class="paren">(</span>&nbsp;Manifesto&nbsp;<span class="paren">)</span></p>
+    <p class="manifesto-text" id="manifestoText">A ALLBINOX METAIS existe para elevar o padrão dos ambientes profissionais. Projetamos e fabricamos, no Brasil, lixeiras e utilitários em aço inox que unem durabilidade real, higiene e presença estética — do hall corporativo à cozinha profissional. Uma marca forte, moderna e preparada para o futuro.</p>
+    <div class="manifesto-badge" id="manifestoBadge">
+      <span class="badge-pill">A força do inox em cada detalhe</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NÚMEROS ============ -->
+<section class="numbers">
+  <div class="container">
+    <div class="numbers-head">
+      <h2 class="section-title">Um portfólio <em class="serif-i violet-text">completo</em>,<br>pronto para especificar</h2>
+      <p class="label"><span class="paren">(</span>&nbsp;Linha 2026&nbsp;<span class="paren">)</span></p>
+    </div>
+    <div class="numbers-grid">
+      <div class="num-cell">
+        <span class="num-value"><span data-count="288">0</span><span class="suf">itens</span></span>
+        <span class="num-label">Produtos de linha com SKU e EAN — pronta especificação e revenda.</span>
+      </div>
+      <div class="num-cell">
+        <span class="num-value"><span data-count="4">0</span><span class="suf">famílias</span></span>
+        <span class="num-label">Lixeiras, coleta seletiva, bituqueiras e utilitários em inox.</span>
+      </div>
+      <div class="num-cell">
+        <span class="num-value"><span data-count="28">0</span><span class="suf">variações</span></span>
+        <span class="num-label">Pedal, aro, basculante, meia-lua, quadrada, externa, embutir e mais.</span>
+      </div>
+      <div class="num-cell">
+        <span class="num-value"><span data-count="3">0</span><span class="suf">a 150 L</span></span>
+        <span class="num-label">Capacidades para cada ambiente — do lavabo à área fabril.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LINHAS ============ -->
+<section class="lines-section" id="linhas">
+  <div class="container">
+    <div class="section-head">
+      <p class="label"><span class="paren">(</span>&nbsp;Explore as linhas&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">Quatro famílias, um mesmo padrão:<br><em class="serif-i chrome-text">inox que impõe respeito</em></h2>
+    </div>
+
+    <div class="line-rows" id="lineRows">
+      <a class="line-row" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener" data-img="assets/prev-lixeiras.jpg">
+        <span class="line-index">/ 01</span>
+        <span class="line-name">Lixeiras Inox</span>
+        <span class="line-desc">Pedal, aro, basculante, meia-lua, quadrada, com tampa, externa, de embutir e de parede. Corpo em aço inox com acabamento premium.</span>
+        <span class="line-count">180 modelos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+      <a class="line-row" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener" data-img="assets/prev-seletiva.jpg">
+        <span class="line-index">/ 02</span>
+        <span class="line-name">Coleta Seletiva</span>
+        <span class="line-desc">Conjuntos e unidades com cores de identificação, em versões aro, pedal, basculante e com divisórias — padronização total do descarte.</span>
+        <span class="line-count">76 modelos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+      <a class="line-row" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener" data-img="assets/prev-bituqueiras.jpg">
+        <span class="line-index">/ 03</span>
+        <span class="line-name">Bituqueiras</span>
+        <span class="line-desc">Coletores de cigarro para áreas externas e de convivência — entradas de prédios, varandas corporativas, hotéis e indústrias.</span>
+        <span class="line-count">7 modelos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+      <a class="line-row" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener" data-img="assets/prev-utilitarios.jpg">
+        <span class="line-index">/ 04</span>
+        <span class="line-name">Utilitários</span>
+        <span class="line-desc">Porta guarda-chuvas, coletores de pilhas, porta extintor e sinalização — os detalhes que completam um ambiente bem resolvido.</span>
+        <span class="line-count">25 modelos
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 12h14m0 0l-6-6m6 6l-6 6"/></svg>
+        </span>
+      </a>
+      <div class="line-preview" id="linePreview" aria-hidden="true">
+        <img src="assets/prev-lixeiras.jpg" alt="" loading="lazy" decoding="async">
+        <img src="assets/prev-seletiva.jpg" alt="" loading="lazy" decoding="async">
+        <img src="assets/prev-bituqueiras.jpg" alt="" loading="lazy" decoding="async">
+        <img src="assets/prev-utilitarios.jpg" alt="" loading="lazy" decoding="async">
+      </div>
+    </div>
+
+    <div class="line-thumbs" aria-hidden="false">
+      <figure><img src="assets/prev-lixeiras.jpg" alt="Lixeira de pedal em escritório" loading="lazy" decoding="async" width="720" height="960"><figcaption>Lixeiras Inox</figcaption></figure>
+      <figure><img src="assets/prev-seletiva.jpg" alt="Conjunto de coleta seletiva em praça de alimentação" loading="lazy" decoding="async" width="720" height="960"><figcaption>Coleta Seletiva</figcaption></figure>
+      <figure><img src="assets/prev-bituqueiras.jpg" alt="Bituqueira pedestal em calçada de centro comercial" loading="lazy" decoding="async" width="720" height="960"><figcaption>Bituqueiras</figcaption></figure>
+      <figure><img src="assets/prev-utilitarios.jpg" alt="Porta guarda-chuvas em hotel" loading="lazy" decoding="async" width="720" height="960"><figcaption>Utilitários</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ VITRINE ============ -->
+<section class="vitrine" id="vitrine">
+  <div class="container">
+    <div class="vit-head">
+      <p class="label"><span class="paren">(</span>&nbsp;Vitrine&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">Produtos que <em class="serif-i violet-text">assinam</em> o ambiente</h2>
+    </div>
+
+    <div class="vit-chips" role="group" aria-label="Filtrar produtos por categoria">
+      <button class="vit-chip active" data-vit="todas">Todas</button>
+      <button class="vit-chip" data-vit="lixeiras">Lixeiras Inox</button>
+      <button class="vit-chip" data-vit="seletiva">Coleta Seletiva</button>
+      <button class="vit-chip" data-vit="bituqueiras">Bituqueiras</button>
+      <button class="vit-chip" data-vit="utilitarios">Utilitários</button>
+    </div>
+
+    <div class="vit-grid" id="vitGrid">
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-1.jpg" alt="Lixeira inox em cozinha com ilha de mármore" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira inox</b><span>Cozinha</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-2.jpg" alt="Lixeira de pedal em escritório" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira pedal</b><span>Escritório</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-3.jpg" alt="Lixeiras com aro em banheiro de mármore" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeiras com aro</b><span>Banheiro</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-4.jpg" alt="Lixeira de pedal com alças em corredor de shopping" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Pedal com alças</b><span>Shopping</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-5.jpg" alt="Família de lixeiras de pedal em vários tamanhos" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Linha pedal</b><span>Família completa</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/lix-6.jpg" alt="Lixeira meia-lua em varanda à noite" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Meia-lua</b><span>Área externa</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/bit-2.jpg" alt="Lixeira externa basculante na calçada de centro comercial" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira externa basculante</b><span>Calçada</span></figcaption>
+      </a>
+
+      <a class="vit-card" data-cat="seletiva" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/sel-1.jpg" alt="Conjunto de coleta seletiva com pedal em cinco cores" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Conjunto pedal</b><span>5 cores</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="seletiva" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/sel-2.jpg" alt="Conjunto de coleta seletiva basculante com tampas coloridas" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Seletiva basculante</b><span>Conjunto</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="seletiva" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/sel-3.jpg" alt="Conjunto de coleta seletiva com pedal em praça de alimentação" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Conjunto pedal</b><span>Praça de alimentação</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="seletiva" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/sel-4.jpg" alt="Coleta seletiva quadrada em parque" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Seletiva quadrada</b><span>Área externa</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="seletiva" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20COLETA%20SELETIVA%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/sel-5.jpg" alt="Coleta seletiva com aro colorido em recepção" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Aro colorido</b><span>Recepção</span></figcaption>
+      </a>
+
+      <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/bit-1.jpg" alt="Bituqueira com cinzeiro em área de café" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Bituqueira cinzeiro</b><span>Convivência</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/bit-3.jpg" alt="Lixeira cinzeiro em praça externa" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira cinzeiro</b><span>Praça</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/bit-4.jpg" alt="Bituqueira de parede em fachada" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>De parede</b><span>Fachada</span></figcaption>
+      </a>
+
+      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/uti-1.jpg" alt="Porta guarda-chuvas em lobby de hotel" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Porta guarda-chuvas</b><span>Hotelaria</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/uti-2.jpg" alt="Porta guarda-chuvas em hall corporativo" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Porta guarda-chuvas</b><span>Hall</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/uti-3.jpg" alt="Coletor de pilhas e baterias em escola" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Coletor de pilhas</b><span>Descarte correto</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/uti-4.jpg" alt="Placa sinalizadora de piso molhado em inox" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Placa piso molhado</b><span>Sinalização</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/galeria/uti-5.jpg" alt="Conjunto de porta guarda-chuvas e sinalização em lobby" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Conjunto segurança</b><span>Lobby</span></figcaption>
+      </a>
+
+    </div>
+
+    <div class="vit-foot">
+      <p>Estas são algumas aplicações reais das nossas linhas. O portfólio completo — com medidas, capacidades e acabamentos — está no catálogo 2026.</p>
+      <a class="btn btn-ghost" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20receber%20o%20cat%C3%A1logo%20ALLBINOX%202026." target="_blank" rel="noopener">Receber o catálogo completo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEGMENTOS ============ -->
+<section class="segments" id="segmentos">
+  <div class="container">
+    <div class="seg-head">
+      <p class="label"><span class="paren">(</span>&nbsp;Seletor de aplicação&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">Feito para o seu negócio.<br><em class="serif-i violet-text">Escolha o seu cenário</em></h2>
+    </div>
+
+    <div class="seg-tabs" role="tablist" aria-label="Segmentos de atuação">
+      <button class="seg-tab active" role="tab" aria-selected="true" data-seg="revenda">Revendas &amp; Distribuição</button>
+      <button class="seg-tab" role="tab" aria-selected="false" data-seg="facilities">Facilities &amp; Condomínios</button>
+      <button class="seg-tab" role="tab" aria-selected="false" data-seg="hotelaria">Hotelaria &amp; Gastronomia</button>
+      <button class="seg-tab" role="tab" aria-selected="false" data-seg="saude">Saúde &amp; Clínicas</button>
+      <button class="seg-tab" role="tab" aria-selected="false" data-seg="industria">Indústria &amp; Corporativo</button>
+    </div>
+
+    <div class="seg-panel active" data-panel="revenda" role="tabpanel">
+      <div>
+        <h3 class="seg-title">Margem, giro e um portfólio que vende sozinho</h3>
+        <p class="seg-copy">Revender ALLBINOX é ter na prateleira um produto que o cliente reconhece como superior no primeiro olhar. Linha completa, dados comerciais organizados e fábrica nacional respondendo rápido.</p>
+        <ul class="seg-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>288 SKUs com EAN e caixa master — cadastro e logística sem fricção.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8v8m-4-4h8M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Reposição direto da fábrica em Suzano/SP, sem intermediários.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8v8m-8-6v6m4-10v10M4 4h16v16H4z"/></svg>Condições comerciais para revenda e tabela por volume.</li>
+        </ul>
+      </div>
+      <aside class="seg-side">
+        <span class="label">Linhas recomendadas</span>
+        <div class="seg-side-lines">
+          <span class="chip">Lixeiras Pedal</span><span class="chip">Com Aro</span><span class="chip">Coleta Seletiva</span><span class="chip">Utilitários</span>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Sou%20revendedor(a)%20e%20quero%20a%20tabela%20e%20condi%C3%A7%C3%B5es%20da%20ALLBINOX." target="_blank" rel="noopener">Quero revender</a>
+      </aside>
+    </div>
+
+    <div class="seg-panel" data-panel="facilities" role="tabpanel">
+      <div>
+        <h3 class="seg-title">Padronização e durabilidade para contratos de longo prazo</h3>
+        <p class="seg-copy">Em condomínios, escritórios e contratos de facilities, o custo real é a reposição. Inox resiste ao uso intenso, mantém o padrão visual entre os ambientes e reduz troca de ativo — do hall à doca.</p>
+        <ul class="seg-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 21V9l8-6 8 6v12M9 21v-6h6v6"/></svg>Mesmo acabamento em todas as áreas: recepção, andares, garagem e externa.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M8 6V4h8v2m-9 4v8m6-8v8M5 6l1 14h12l1-14"/></svg>Coleta seletiva com cores de identificação — conformidade visual imediata.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v3m0 12v3m9-9h-3M6 12H3m14.5-5.5l-2 2m-7 7l-2 2m11 0l-2-2m-7-7l-2-2"/></svg>De 3 a 150 litros: dimensionamento certo para cada ponto de descarte.</li>
+        </ul>
+      </div>
+      <aside class="seg-side">
+        <span class="label">Linhas recomendadas</span>
+        <div class="seg-side-lines">
+          <span class="chip">Basculantes</span><span class="chip">Coleta Seletiva</span><span class="chip">Linha Externa</span><span class="chip">Porta Guarda-Chuvas</span>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Atuo%20com%20facilities%2Fcondom%C3%ADnios%20e%20quero%20cota%C3%A7%C3%A3o%20ALLBINOX." target="_blank" rel="noopener">Cotar para meu contrato</a>
+      </aside>
+    </div>
+
+    <div class="seg-panel" data-panel="hotelaria" role="tabpanel">
+      <div>
+        <h3 class="seg-title">O detalhe que o hóspede percebe sem saber por quê</h3>
+        <p class="seg-copy">Em hotéis e restaurantes, cada objeto comunica. Uma lixeira de inox polido não se esconde: compõe o ambiente. Pedal para operação discreta no salão, linha externa elegante para as áreas de convivência.</p>
+        <ul class="seg-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 21V7a2 2 0 012-2h10a2 2 0 012 2v14M5 21h14M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/></svg>Acabamento espelhado que conversa com cozinhas e halls de alto padrão.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 19a6 6 0 1112 0M12 3v2m0 0a7 7 0 017 7H5a7 7 0 017-7z"/></svg>Acionamento por pedal: higiene e discrição na operação do salão.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4.5 8-11a8 8 0 10-16 0c0 6.5 8 11 8 11z"/></svg>Bituqueiras e ensacadores para varandas, entradas e áreas externas.</li>
+        </ul>
+      </div>
+      <aside class="seg-side">
+        <span class="label">Linhas recomendadas</span>
+        <div class="seg-side-lines">
+          <span class="chip">Pedal Redonda</span><span class="chip">Quadrada Aro</span><span class="chip">Bituqueiras</span><span class="chip">Linha Externa</span>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Sou%20de%20hotelaria%2Fgastronomia%20e%20quero%20conhecer%20a%20linha%20ALLBINOX." target="_blank" rel="noopener">Equipar meu espaço</a>
+      </aside>
+    </div>
+
+    <div class="seg-panel" data-panel="saude" role="tabpanel">
+      <div>
+        <h3 class="seg-title">Higiene sem contato, superfícies que aceitam protocolo</h3>
+        <p class="seg-copy">Clínicas e hospitais exigem descarte sem toque e materiais que suportam sanitização constante. O inox é o padrão histórico da saúde por um motivo: superfície não porosa, fácil de limpar, que dura.</p>
+        <ul class="seg-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 19a6 6 0 1112 0M9 3h6M12 3v4"/></svg>Abertura por pedal: as mãos não tocam o coletor em nenhum momento.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z"/></svg>Superfície lisa e resistente a agentes de limpeza de uso hospitalar.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6m-3-3v6M5 5h14v14H5z"/></svg>Identificação para resíduos específicos e coletores de pilhas.</li>
+        </ul>
+      </div>
+      <aside class="seg-side">
+        <span class="label">Linhas recomendadas</span>
+        <div class="seg-side-lines">
+          <span class="chip">Pedal</span><span class="chip">Pedal + Rodízios</span><span class="chip">Coleta Seletiva</span><span class="chip">Coletor de Pilhas</span>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Sou%20da%20%C3%A1rea%20da%20sa%C3%BAde%20e%20quero%20cota%C3%A7%C3%A3o%20ALLBINOX." target="_blank" rel="noopener">Cotar para minha unidade</a>
+      </aside>
+    </div>
+
+    <div class="seg-panel" data-panel="industria" role="tabpanel">
+      <div>
+        <h3 class="seg-title">Volume, mobilidade e segurança para a operação pesada</h3>
+        <p class="seg-copy">Na indústria, lixeira é equipamento: precisa mover volume com praticidade e aguentar o turno. Grandes capacidades com rodízios e alças, mais itens de segurança que organizam o chão de fábrica.</p>
+        <ul class="seg-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 17a2 2 0 104 0m6 0a2 2 0 104 0M3 6h11v11H3zM14 9h4l3 3v5h-7z"/></svg>Até 150 litros com rodízios e alças — deslocamento sem esforço.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v4m0 4h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/></svg>Porta extintor e sinalização em inox — segurança com o mesmo padrão.</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16v4H4zM4 12h16v8H4zM8 8v4m8-4v4"/></svg>Coleta seletiva em conjuntos para pontos de descarte de alto fluxo.</li>
+        </ul>
+      </div>
+      <aside class="seg-side">
+        <span class="label">Linhas recomendadas</span>
+        <div class="seg-side-lines">
+          <span class="chip">Pedal + Rodízios + Alças</span><span class="chip">Externa</span><span class="chip">Porta Extintor</span><span class="chip">Conjuntos Seletiva</span>
+        </div>
+        <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Sou%20da%20%C3%A1rea%20industrial%2Fcorporativa%20e%20quero%20cota%C3%A7%C3%A3o%20ALLBINOX." target="_blank" rel="noopener">Cotar para minha operação</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MARCA / SHOWROOM ============ -->
+<section class="brand-section" id="marca">
+  <div class="container brand-grid">
+    <figure class="brand-photo">
+      <img id="brandParallax" src="assets/showroom.jpg" alt="Conceito de fachada ALLBINOX METAIS com produtos de inox iluminados">
+    </figure>
+    <div class="brand-copy">
+      <p class="label"><span class="paren">(</span>&nbsp;A marca&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">Uma nova fase das <em class="serif-i violet-text">soluções em aço inox</em></h2>
+      <p>A ALLBINOX METAIS nasceu para ser referência em utilitários de inox no Brasil. Fabricação própria em Suzano/SP, controle de qualidade peça a peça e um portfólio construído ouvindo quem compra, revende e opera — todos os dias.</p>
+      <p>Mais do que produtos, entregamos confiança, durabilidade e eficiência em cada projeto.</p>
+      <div class="brand-facts">
+        <div class="brand-fact"><b>Fundação</b><span>2020 — Suzano, São Paulo</span></div>
+        <div class="brand-fact"><b>Fabricação</b><span>Nacional, com fábrica própria</span></div>
+        <div class="brand-fact"><b>Portfólio</b><span>288 produtos · 4 famílias · 28 variações</span></div>
+        <div class="brand-fact"><b>Atendimento</b><span>B2B — revendas, facilities e projetos</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WALL DE POSTS ============ -->
+<section class="wall">
+  <div class="container wall-head">
+    <div>
+      <p class="label" style="margin-bottom:14px"><span class="paren">(</span>&nbsp;A marca em movimento&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">O inox como a gente <em class="serif-i chrome-text">apresenta</em></h2>
+    </div>
+    <a class="nav-cta" href="https://www.instagram.com/allbinoxmetais" target="_blank" rel="noopener" style="white-space:nowrap">@allbinoxmetais</a>
+  </div>
+  <div class="wall-track-clip">
+    <div class="wall-track">
+      <div class="wall-card"><img src="assets/post-linha.jpg" alt="Post: linha de lixeiras para ambientes profissionais" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/wall-hotel.jpg" alt="Lixeira espelhada em lobby de hotel" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/post-quadrada.jpg" alt="Post: lixeira quadrada com aro" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/post-ensacador.jpg" alt="Post: ensacador em aço inox em hotel" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/wall-conjunto.jpg" alt="Conjunto de porta guarda-chuvas e sinalização em inox" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/post-linha.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/wall-hotel.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/post-quadrada.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/post-ensacador.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+      <div class="wall-card"><img src="assets/wall-conjunto.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DIFERENCIAIS ============ -->
+<section>
+  <div class="container">
+    <div class="section-head" style="margin-bottom:64px;display:flex;flex-direction:column;gap:16px">
+      <p class="label"><span class="paren">(</span>&nbsp;Por que ALLBINOX&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">O que sustenta o <em class="serif-i violet-text">alto padrão</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-cell">
+        <span class="idx">/ 01</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 4v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V7l7-4z"/></svg>
+        <h3>Inox que dura</h3>
+        <p>Resistência à corrosão e ao uso intenso. O ativo que você não precisa trocar na próxima renovação de contrato.</p>
+      </div>
+      <div class="why-cell">
+        <span class="idx">/ 02</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18M5.5 6.5l13 11M18.5 6.5l-13 11"/></svg>
+        <h3>Acabamento premium</h3>
+        <p>Superfície polida com presença estética real — o produto que valoriza o ambiente em vez de se esconder nele.</p>
+      </div>
+      <div class="why-cell">
+        <span class="idx">/ 03</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-8h6v8"/></svg>
+        <h3>Fabricação nacional</h3>
+        <p>Fábrica própria em Suzano/SP: prazo curto, reposição garantida e resposta rápida a demandas de volume.</p>
+      </div>
+      <div class="why-cell">
+        <span class="idx">/ 04</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M10 11a4 4 0 100-8 4 4 0 000 8zM21 21v-2a4 4 0 00-3-3.87M15 3.13A4 4 0 0117.5 7"/></svg>
+        <h3>Atendimento B2B</h3>
+        <p>Time comercial que fala a língua de revendas, facilities e compras: SKU, EAN, caixa master, prazo e tabela.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA FINAL ============ -->
+<section class="cta-final" id="contato">
+  <div class="cta-bg" aria-hidden="true"></div>
+  <div class="container cta-inner">
+    <div class="cta-left">
+      <p class="label" style="margin-bottom:24px"><span class="paren">(</span>&nbsp;Vamos conversar&nbsp;<span class="paren">)</span></p>
+      <h2 class="cta-title">Vamos equipar o seu <em class="serif-i violet-text">próximo projeto?</em></h2>
+      <p>Receba o catálogo 2026, tabela para revenda ou uma cotação sob medida. Resposta direta do nosso comercial, sem robô e sem fila.</p>
+      <div class="cta-contacts">
+        <a class="cta-contact" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20receber%20o%20cat%C3%A1logo%20ALLBINOX%202026." target="_blank" rel="noopener">
+          <span>+55 11 97879-1851</span><span>WhatsApp</span>
+        </a>
+        <a class="cta-contact" href="mailto:contato@allbinox.com.br">
+          <span>contato@allbinox.com.br</span><span>E-mail</span>
+        </a>
+        <a class="cta-contact" href="https://www.instagram.com/allbinoxmetais" target="_blank" rel="noopener">
+          <span>@allbinoxmetais</span><span>Instagram</span>
+        </a>
+        <div class="cta-contact" style="cursor:default">
+          <span>Suzano — São Paulo, Brasil</span><span>Fábrica</span>
+        </div>
+      </div>
+    </div>
+    <form class="quote-card" id="quoteForm" novalidate>
+      <h3>Orçamento expresso</h3>
+      <p class="small">Preencha e receba o retorno no seu WhatsApp.</p>
+      <div class="field">
+        <label for="qNome">Seu nome</label>
+        <input id="qNome" name="nome" type="text" placeholder="Como devemos te chamar?" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="qEmpresa">Empresa</label>
+        <input id="qEmpresa" name="empresa" type="text" placeholder="Nome da empresa" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label for="qSegmento">Segmento</label>
+        <select id="qSegmento" name="segmento">
+          <option value="Revenda / Distribuição">Revenda / Distribuição</option>
+          <option value="Facilities / Condomínios">Facilities / Condomínios</option>
+          <option value="Hotelaria / Gastronomia">Hotelaria / Gastronomia</option>
+          <option value="Saúde / Clínicas">Saúde / Clínicas</option>
+          <option value="Indústria / Corporativo">Indústria / Corporativo</option>
+          <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="qMsg">O que você precisa?</label>
+        <textarea id="qMsg" name="mensagem" placeholder="Ex.: 40 lixeiras pedal 30L para um condomínio…"></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 9.88 9.89c0 5.45-4.43 9.88-9.89 9.88m8.4-18.28A11.82 11.82 0 0 0 12.04 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.4"/></svg>
+        Enviar pelo WhatsApp
+      </button>
+      <span class="quote-note">Abre o WhatsApp com a sua mensagem pronta. Sem cadastro, sem spam.</span>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="container">
+    <p class="footer-thanks">Obrigado pela visita.<br><em class="serif-i chrome-text">Até o próximo projeto.</em></p>
+    <div class="footer-logo">
+      <img src="assets/logo-wordmark.png" alt="ALLBINOX METAIS">
+    </div>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <b>Navegação</b>
+        <a href="#linhas">Linhas de produto</a>
+        <a href="#segmentos">Segmentos</a>
+        <a href="#marca">A marca</a>
+        <a href="#contato">Contato</a>
+      </div>
+      <div class="footer-col">
+        <b>Comercial</b>
+        <a href="https://wa.me/5511978791851" target="_blank" rel="noopener">WhatsApp — 11 97879-1851</a>
+        <a href="mailto:contato@allbinox.com.br">contato@allbinox.com.br</a>
+        <a href="https://www.instagram.com/allbinoxmetais" target="_blank" rel="noopener">Instagram — @allbinoxmetais</a>
+      </div>
+      <div class="footer-col">
+        <b>A empresa</b>
+        <span>ALLBINOX METAIS</span>
+        <span>Fábrica própria — Suzano/SP</span>
+        <span>Soluções em aço inox desde 2020</span>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="sig"><span class="violet-text">ALLBINOX METAIS</span> — A força do inox em cada detalhe.</span>
+      <span>© <span id="year">2026</span> ALLBINOX METAIS. Todos os direitos reservados.</span>
+    </div>
+  </div>
+</footer>
+
+<a class="wpp-float" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20ALLBINOX." target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.9 1.22 3.1.15.2 2.1 3.2 5.1 4.49.71.3 1.27.49 1.7.63.72.23 1.37.2 1.88.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.13-.27-.2-.57-.35M12.05 21.79h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.88 9.9-9.88a9.83 9.83 0 0 1 9.88 9.89c0 5.45-4.43 9.88-9.89 9.88m8.4-18.28A11.82 11.82 0 0 0 12.04 0C5.5 0 .16 5.33.16 11.89c0 2.1.55 4.14 1.59 5.94L.06 24l6.3-1.65a11.88 11.88 0 0 0 5.68 1.45h.01c6.55 0 11.89-5.33 11.89-11.89 0-3.18-1.24-6.16-3.49-8.4"/></svg>
+</a>
+
+<script>
+(function(){
+  "use strict";
+
+  var isMobile = window.matchMedia("(max-width: 768px)").matches || "ontouchstart" in window;
+  var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Ano do rodapé ----------
+  var yearEl = document.getElementById("year");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+  // ---------- GSAP + ScrollTrigger ----------
+  var hasGsap = typeof gsap !== "undefined";
+  var hasST = hasGsap && typeof ScrollTrigger !== "undefined";
+  if (hasST) gsap.registerPlugin(ScrollTrigger);
+
+  // ---------- Lenis (scroll suave, desktop) ----------
+  if (typeof Lenis !== "undefined" && !isMobile && !reduceMotion) {
+    try {
+      var lenis = new Lenis({
+        duration: 1.15,
+        easing: function(t){ return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
+        smoothWheel: true,
+        syncTouch: false
+      });
+      if (hasST) {
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        (function raf(time){ lenis.raf(time); requestAnimationFrame(raf); })(0);
+      }
+      // âncoras internas via Lenis
+      document.querySelectorAll('a[href^="#"]').forEach(function(a){
+        a.addEventListener("click", function(e){
+          var id = a.getAttribute("href");
+          if (id && id.length > 1) {
+            var target = document.querySelector(id);
+            if (target) { e.preventDefault(); lenis.scrollTo(target, { offset: -70 }); }
+          }
+        });
+      });
+    } catch (e) { /* scroll nativo segue funcionando */ }
+  }
+
+  // ---------- Nav: fundo ao rolar ----------
+  var nav = document.getElementById("nav");
+  var onScrollNav = function(){
+    if (!nav) return;
+    if (window.scrollY > 40) nav.classList.add("scrolled");
+    else nav.classList.remove("scrolled");
+  };
+  window.addEventListener("scroll", onScrollNav, { passive: true });
+  onScrollNav();
+
+  // ---------- Barra de progresso ----------
+  var progress = document.querySelector(".scroll-progress");
+  window.addEventListener("scroll", function(){
+    if (!progress) return;
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || document.body.scrollTop) / max : 0;
+    progress.style.transform = "scaleX(" + p + ")";
+  }, { passive: true });
+
+  // ---------- Menu mobile ----------
+  var burger = document.getElementById("burger");
+  var mobileMenu = document.getElementById("mobileMenu");
+  if (burger && mobileMenu) {
+    burger.addEventListener("click", function(){
+      var open = mobileMenu.classList.toggle("open");
+      burger.classList.toggle("open", open);
+      burger.setAttribute("aria-expanded", open ? "true" : "false");
+      document.body.style.overflow = open ? "hidden" : "";
+    });
+    mobileMenu.querySelectorAll("a").forEach(function(a){
+      a.addEventListener("click", function(){
+        mobileMenu.classList.remove("open");
+        burger.classList.remove("open");
+        burger.setAttribute("aria-expanded","false");
+        document.body.style.overflow = "";
+      });
+    });
+  }
+
+  // ---------- Cursor dot (desktop) ----------
+  var dot = document.querySelector(".cursor-dot");
+  if (dot && window.matchMedia("(hover: hover) and (pointer: fine)").matches && hasGsap) {
+    var xTo = gsap.quickTo(dot, "x", { duration: 0.35, ease: "power3" });
+    var yTo = gsap.quickTo(dot, "y", { duration: 0.35, ease: "power3" });
+    window.addEventListener("mousemove", function(e){ xTo(e.clientX); yTo(e.clientY); });
+    document.querySelectorAll("a, button, .line-row, .seg-tab").forEach(function(el){
+      el.addEventListener("mouseenter", function(){ gsap.to(dot, { scale: 2.4, duration: 0.3 }); });
+      el.addEventListener("mouseleave", function(){ gsap.to(dot, { scale: 1, duration: 0.3 }); });
+    });
+  }
+
+  // ---------- Mostrar item extra do hero-meta no desktop ----------
+  document.querySelectorAll("[data-show-desktop]").forEach(function(el){
+    if (window.matchMedia("(min-width: 900px)").matches) el.style.display = "";
+  });
+
+  // ---------- HERO: tipografia cinética ----------
+  // Nota: linhas com gradiente (background-clip:text) NÃO podem ser fatiadas
+  // em spans com transform (SplitType) — o gradiente some. Reveal por linha mascarada.
+  if (hasGsap && !reduceMotion) {
+    gsap.from(".hero-line", {
+      yPercent: 115, duration: 1.25,
+      stagger: 0.1, ease: "expo.out", delay: 0.12
+    });
+    gsap.from(".hero-sub > *", { y: 30, opacity: 0, duration: 0.9, stagger: 0.12, delay: 0.55, ease: "power3.out" });
+    gsap.from(".hero-visual", { x: 60, opacity: 0, duration: 1.2, delay: 0.4, ease: "expo.out" });
+    gsap.from(".hero-meta", { opacity: 0, y: 20, duration: 0.8, delay: 0.9, ease: "power3.out" });
+    gsap.from(".nav-inner", { y: -24, opacity: 0, duration: 0.9, delay: 0.1, ease: "power3.out" });
+  }
+
+  // ---------- MANIFESTO: pin + preenchimento por palavra ----------
+  var manifestoText = document.getElementById("manifestoText");
+  if (manifestoText && hasST && typeof SplitType !== "undefined" && !reduceMotion) {
+    try {
+      var mSplit = new SplitType(manifestoText, { types: "words" });
+      var accentWords = ["ALLBINOX","METAIS.","METAIS","inox","forte,","moderna","futuro."];
+      mSplit.words.forEach(function(w){
+        w.classList.add("word");
+        if (accentWords.indexOf(w.textContent.trim()) !== -1) w.classList.add("accent-w");
+      });
+      if (!isMobile) {
+        var tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#manifesto",
+            start: "top top",
+            end: "+=1600",
+            pin: true,
+            scrub: 0.6,
+            anticipatePin: 1
+          }
+        });
+        tl.to(mSplit.words, {
+          color: function(i, el){ return el.classList.contains("accent-w") ? "#A855F7" : "#F4F2F7"; },
+          stagger: 0.06,
+          ease: "none",
+          duration: 8
+        });
+        tl.from("#manifestoBadge", { opacity: 0, y: 24, duration: 1.2 }, ">-0.4");
+      } else {
+        gsap.to(mSplit.words, {
+          color: function(i, el){ return el.classList.contains("accent-w") ? "#A855F7" : "#F4F2F7"; },
+          stagger: 0.03,
+          scrollTrigger: { trigger: "#manifesto", start: "top 70%", end: "bottom 65%", scrub: 0.5 }
+        });
+      }
+    } catch (e) {
+      manifestoText.style.color = "#F4F2F7";
+    }
+  } else if (manifestoText) {
+    // fallback sem libs: texto visível
+    manifestoText.style.color = "#F4F2F7";
+  }
+
+  // ---------- REVEAL staggered por seção ----------
+  if (hasST && !reduceMotion) {
+    if (typeof ScrollTrigger.batch === "function") {
+      ScrollTrigger.batch(".vit-card", {
+        start: "top 92%",
+        once: true,
+        onEnter: function(els){
+          gsap.from(els, { opacity: 0, y: 30, duration: 0.6, stagger: 0.06, ease: "power3.out", clearProps: "opacity,transform" });
+        }
+      });
+    }
+    gsap.utils.toArray(".numbers-head, .section-head, .seg-head, .vit-head, .vit-foot, .wall-head, .cta-left, .quote-card, .footer-thanks").forEach(function(block){
+      gsap.from(block, {
+        opacity: 0, y: 40, duration: 0.9, ease: "power3.out",
+        scrollTrigger: { trigger: block, start: "top 86%", toggleActions: "play none none none" }
+      });
+    });
+    gsap.utils.toArray(".numbers-grid .num-cell, .why-grid .why-cell").forEach(function(cell, i){
+      gsap.from(cell, {
+        opacity: 0, y: 36, duration: 0.7, ease: "power3.out",
+        scrollTrigger: { trigger: cell, start: "top 90%", toggleActions: "play none none none" }
+      });
+    });
+    gsap.utils.toArray(".line-row").forEach(function(row){
+      gsap.from(row, {
+        opacity: 0, y: 44, duration: 0.8, ease: "power3.out",
+        scrollTrigger: { trigger: row, start: "top 90%", toggleActions: "play none none none" }
+      });
+    });
+    gsap.from(".brand-photo", {
+      opacity: 0, x: -50, duration: 1, ease: "power3.out",
+      scrollTrigger: { trigger: ".brand-grid", start: "top 80%" }
+    });
+    gsap.from(".brand-copy > *", {
+      opacity: 0, y: 30, duration: 0.8, stagger: 0.1, ease: "power3.out",
+      scrollTrigger: { trigger: ".brand-grid", start: "top 78%" }
+    });
+  }
+
+  // (Títulos de seção não usam SplitType: contêm <em> com gradiente
+  //  background-clip:text, que quebra ao fatiar em spans transformados.
+  //  Eles já entram pelo reveal em bloco acima.)
+
+  // ---------- CONTADORES ----------
+  if (hasST && !reduceMotion) {
+    gsap.utils.toArray("[data-count]").forEach(function(el){
+      var target = parseInt(el.getAttribute("data-count"), 10) || 0;
+      var obj = { v: 0 };
+      gsap.to(obj, {
+        v: target, duration: 1.6, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 90%", toggleActions: "play none none none" },
+        onUpdate: function(){ el.textContent = String(Math.round(obj.v)); }
+      });
+    });
+  } else {
+    document.querySelectorAll("[data-count]").forEach(function(el){
+      el.textContent = el.getAttribute("data-count");
+    });
+  }
+
+  // ---------- LINHAS: preview flutuante no hover (desktop) ----------
+  var lineRows = document.getElementById("lineRows");
+  var preview = document.getElementById("linePreview");
+  if (lineRows && preview && hasGsap && window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 1024px)").matches) {
+    var imgs = preview.querySelectorAll("img");
+    var pxTo = gsap.quickTo(preview, "x", { duration: 0.5, ease: "power3" });
+    var pyTo = gsap.quickTo(preview, "y", { duration: 0.5, ease: "power3" });
+    var rows = lineRows.querySelectorAll(".line-row");
+    rows.forEach(function(row, idx){
+      row.addEventListener("mouseenter", function(){
+        imgs.forEach(function(im, i){ im.classList.toggle("on", i === idx); });
+        gsap.to(preview, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" });
+      });
+      row.addEventListener("mouseleave", function(){
+        gsap.to(preview, { opacity: 0, scale: 0.96, duration: 0.3, ease: "power3.out" });
+      });
+    });
+    lineRows.addEventListener("mousemove", function(e){
+      var rect = lineRows.getBoundingClientRect();
+      pxTo(e.clientX - rect.left + 36);
+      pyTo(e.clientY - rect.top - 170);
+    });
+    gsap.set(preview, { opacity: 0, scale: 0.96 });
+  }
+
+  // ---------- VITRINE: filtro por categoria ----------
+  var vitChips = document.querySelectorAll(".vit-chip");
+  var vitCards = document.querySelectorAll(".vit-card");
+  vitChips.forEach(function(chip){
+    chip.addEventListener("click", function(){
+      var key = chip.getAttribute("data-vit");
+      vitChips.forEach(function(c){ c.classList.toggle("active", c === chip); });
+      var shown = [];
+      vitCards.forEach(function(card){
+        var on = key === "todas" || card.getAttribute("data-cat") === key;
+        card.style.display = on ? "" : "none";
+        if (on) shown.push(card);
+      });
+      if (hasGsap && !reduceMotion && shown.length) {
+        gsap.fromTo(shown, { opacity: 0, y: 18 }, {
+          opacity: 1, y: 0, duration: 0.45, stagger: 0.035, ease: "power3.out",
+          overwrite: "auto", clearProps: "opacity,transform"
+        });
+      }
+    });
+  });
+
+  // ---------- SEGMENTOS: tabs ----------
+  var segTabs = document.querySelectorAll(".seg-tab");
+  var segPanels = document.querySelectorAll(".seg-panel");
+  segTabs.forEach(function(tab){
+    tab.addEventListener("click", function(){
+      var key = tab.getAttribute("data-seg");
+      segTabs.forEach(function(t){
+        var on = t === tab;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-selected", on ? "true" : "false");
+      });
+      segPanels.forEach(function(p){
+        var on = p.getAttribute("data-panel") === key;
+        if (on && !p.classList.contains("active")) {
+          p.classList.add("active");
+          if (hasGsap && !reduceMotion) {
+            gsap.fromTo(p, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: "power3.out", clearProps: "all" });
+          }
+        } else if (!on) {
+          p.classList.remove("active");
+        }
+      });
+    });
+  });
+
+  // ---------- PARALLAX no showroom (desktop) ----------
+  if (hasST && !isMobile && !reduceMotion) {
+    var bp = document.getElementById("brandParallax");
+    if (bp) {
+      gsap.to(bp, {
+        yPercent: -10, ease: "none",
+        scrollTrigger: { trigger: ".brand-photo", start: "top bottom", end: "bottom top", scrub: true }
+      });
+    }
+  }
+
+  // ---------- Botões magnéticos (desktop) ----------
+  if (hasGsap && window.matchMedia("(hover: hover) and (pointer: fine)").matches && !reduceMotion) {
+    document.querySelectorAll(".btn-primary, .nav-cta").forEach(function(btn){
+      var bx = gsap.quickTo(btn, "x", { duration: 0.4, ease: "power3" });
+      var by = gsap.quickTo(btn, "y", { duration: 0.4, ease: "power3" });
+      btn.addEventListener("mousemove", function(e){
+        var r = btn.getBoundingClientRect();
+        bx((e.clientX - r.left - r.width / 2) * 0.18);
+        by((e.clientY - r.top - r.height / 2) * 0.22);
+      });
+      btn.addEventListener("mouseleave", function(){ bx(0); by(0); });
+    });
+  }
+
+  // ---------- FORM: monta mensagem do WhatsApp ----------
+  var form = document.getElementById("quoteForm");
+  if (form) {
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var nome = (document.getElementById("qNome").value || "").trim();
+      var empresa = (document.getElementById("qEmpresa").value || "").trim();
+      var seg = document.getElementById("qSegmento").value;
+      var msg = (document.getElementById("qMsg").value || "").trim();
+      var texto = "Olá! Vim pelo site da ALLBINOX." +
+        (nome ? "\nNome: " + nome : "") +
+        (empresa ? "\nEmpresa: " + empresa : "") +
+        "\nSegmento: " + seg +
+        (msg ? "\nNecessidade: " + msg : "") +
+        "\n\nPode me enviar um orçamento?";
+      window.open("https://wa.me/5511978791851?text=" + encodeURIComponent(texto), "_blank", "noopener");
+    });
+  }
+})();
+</script>
+</body>
+</html>

@@ -227,9 +227,13 @@ section{padding-block:60px;position:relative}
 @media(min-width:1024px){.hero-frames{display:block}}
 .frame{position:absolute;inset:0;opacity:0;visibility:hidden;overflow:hidden}
 .frame-bg{
-  position:absolute;left:0;top:-3%;width:100%;height:106%;
+  position:absolute;left:0;top:-1.5%;width:100%;height:103%;
   object-fit:cover;will-change:transform;
 }
+/* âncora do enquadramento no produto: o corte do cover acontece longe dele */
+.frame[data-f="1"] .frame-bg{object-position:50% 72%}
+.frame[data-f="2"] .frame-bg{object-position:50% 62%}
+.frame[data-f="3"] .frame-bg{object-position:50% 74%}
 .frame-scrim{
   position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(11,10,14,.84) 0%,rgba(11,10,14,.42) 44%,rgba(11,10,14,.08) 72%,rgba(11,10,14,.35) 100%);
@@ -1438,7 +1442,7 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
           .to(f, { autoAlpha: 1, ease: "none", duration: 0.4 }, t)
           // fromTo (e não from): com invalidateOnRefresh, from() re-captura o "fim"
           // já estampado e congela. Extremos explícitos são à prova de refresh.
-          .fromTo(f + " .frame-bg", { scale: 1.14, yPercent: 2.5 }, { scale: 1, yPercent: -2.5, ease: "none", duration: 1.55 }, t)
+          .fromTo(f + " .frame-bg", { scale: 1.06, yPercent: 1.2 }, { scale: 1, yPercent: -1.2, ease: "none", duration: 1.55 }, t)
           .fromTo(f + " .fc-item", { y: 46, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.085, ease: "none", duration: 0.4 }, t + 0.1)
           .to(".fdot", { opacity: 0.35, ease: "none", duration: 0.18 }, t)
           .to('.fdot[data-d="' + n + '"]', { opacity: 1, ease: "none", duration: 0.18 }, t + 0.02);

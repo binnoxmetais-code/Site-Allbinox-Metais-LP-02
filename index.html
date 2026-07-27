@@ -233,7 +233,9 @@ section{padding-block:60px;position:relative}
 /* âncora do enquadramento no produto: o corte do cover acontece longe dele */
 .frame[data-f="1"] .frame-bg{object-position:50% 72%}
 .frame[data-f="2"] .frame-bg{object-position:50% 62%}
-.frame[data-f="3"] .frame-bg{object-position:50% 74%}
+.frame[data-f="3"] .frame-bg{object-position:50% 50%}
+.frame[data-f="4"] .frame-bg{object-position:50% 62%}
+.frame[data-f="5"] .frame-bg{object-position:50% 74%}
 .frame-scrim{
   position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(11,10,14,.84) 0%,rgba(11,10,14,.42) 44%,rgba(11,10,14,.08) 72%,rgba(11,10,14,.35) 100%);
@@ -263,7 +265,7 @@ section{padding-block:60px;position:relative}
   color:var(--text);opacity:.85;font-size:clamp(.9375rem,1.2vw,1.0625rem);
   max-width:440px;text-shadow:0 1px 18px rgba(0,0,0,.55);
 }
-.fc-rule{width:64px;height:2px;background:linear-gradient(90deg,var(--violet),var(--violet-light))}
+.fc-rule{width:64px;height:2px;background:linear-gradient(90deg,var(--violet),var(--violet-light));transform-origin:left center}
 .frame-dots{
   position:absolute;right:clamp(20px,3.4vw,48px);top:50%;transform:translateY(-50%);
   z-index:3;display:none;flex-direction:column;gap:14px;
@@ -732,20 +734,40 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
       </div>
     </div>
     <div class="frame frame--right" data-f="2">
+      <img class="frame-bg" src="assets/frame-pedal.jpg" alt="" loading="lazy" decoding="async">
+      <div class="frame-scrim" aria-hidden="true"></div>
+      <div class="frame-copy">
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;02 · Linha Pedal&nbsp;<span class="paren">)</span></p>
+        <h3 class="fc-big fc-item"><span class="chrome-text">Pedal</span><em class="serif-i violet-text">sem contato</em></h3>
+        <p class="fc-sub fc-item">Acionamento sem toque, do lavabo à cozinha — a família completa de volumes.</p>
+        <span class="fc-rule fc-item" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="frame" data-f="3">
+      <img class="frame-bg" src="assets/frame-basculante.jpg" alt="" loading="lazy" decoding="async">
+      <div class="frame-scrim" aria-hidden="true"></div>
+      <div class="frame-copy">
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;03 · Linha Basculante&nbsp;<span class="paren">)</span></p>
+        <h3 class="fc-big fc-item"><span class="chrome-text">Basculante</span><em class="serif-i violet-text">fluxo contínuo</em></h3>
+        <p class="fc-sub fc-item">Tampa vai-e-vem para o descarte rápido em áreas de alto fluxo.</p>
+        <span class="fc-rule fc-item" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="frame frame--right" data-f="4">
       <img class="frame-bg" src="assets/frame-2.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
-        <p class="label fc-item"><span class="paren">(</span>&nbsp;02 · Coleta Seletiva&nbsp;<span class="paren">)</span></p>
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;04 · Coleta Seletiva&nbsp;<span class="paren">)</span></p>
         <h3 class="fc-big fc-item"><span class="chrome-text">Cores</span><em class="serif-i violet-text">que educam</em></h3>
         <p class="fc-sub fc-item">Conjuntos e unidades nas cores oficiais de reciclagem — 76 modelos.</p>
         <span class="fc-rule fc-item" aria-hidden="true"></span>
       </div>
     </div>
-    <div class="frame" data-f="3">
+    <div class="frame" data-f="5">
       <img class="frame-bg" src="assets/frame-3.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
-        <p class="label fc-item"><span class="paren">(</span>&nbsp;03 · Linha Externa&nbsp;<span class="paren">)</span></p>
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;05 · Linha Externa&nbsp;<span class="paren">)</span></p>
         <h3 class="fc-big fc-item"><span class="chrome-text">Inox</span><em class="serif-i violet-text">a céu aberto</em></h3>
         <p class="fc-sub fc-item">Meia-lua, externas e bituqueiras para as áreas de convivência.</p>
         <span class="fc-rule fc-item" aria-hidden="true"></span>
@@ -756,6 +778,8 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
     <span class="fdot" data-d="1"></span>
     <span class="fdot" data-d="2"></span>
     <span class="fdot" data-d="3"></span>
+    <span class="fdot" data-d="4"></span>
+    <span class="fdot" data-d="5"></span>
   </div>
   <div class="hero-dim" aria-hidden="true"></div>
 
@@ -1408,13 +1432,13 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         scrollTrigger: {
           trigger: ".hero",
           start: "top top",
-          end: "+=4200",
+          end: "+=6000",
           pin: true,
           scrub: 0.7,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: function(self){
-            heroFinal.classList.toggle("on", self.progress > 0.79);
+            heroFinal.classList.toggle("on", self.progress > 0.84);
           }
         }
       });
@@ -1435,18 +1459,23 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         .to("#heroFrames", { autoAlpha: 1, ease: "none", duration: 0.3 }, 0.55)
         .to(".frame-dots", { autoAlpha: 1, ease: "none", duration: 0.3 }, 0.62);
 
-      [1, 2, 3].forEach(function(n, i){
+      [1, 2, 3, 4, 5].forEach(function(n, i){
         var t = 0.62 + i * 1.1;
         var f = '.frame[data-f="' + n + '"]';
+        var par = n % 2 === 0; // frames pares: zoom invertido + leve pan lateral (variedade de motion)
         heroTl
           .to(f, { autoAlpha: 1, ease: "none", duration: 0.4 }, t)
           // fromTo (e não from): com invalidateOnRefresh, from() re-captura o "fim"
           // já estampado e congela. Extremos explícitos são à prova de refresh.
-          .fromTo(f + " .frame-bg", { scale: 1.06, yPercent: 1.2 }, { scale: 1, yPercent: -1.2, ease: "none", duration: 1.55 }, t)
+          .fromTo(f + " .frame-bg",
+            par ? { scale: 1, yPercent: -1.2, xPercent: 0.8 } : { scale: 1.06, yPercent: 1.2, xPercent: 0 },
+            par ? { scale: 1.06, yPercent: 1.2, xPercent: -0.8, ease: "none", duration: 1.55 }
+                : { scale: 1, yPercent: -1.2, xPercent: 0, ease: "none", duration: 1.55 }, t)
           .fromTo(f + " .fc-item", { y: 46, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.085, ease: "none", duration: 0.4 }, t + 0.1)
-          .to(".fdot", { opacity: 0.35, ease: "none", duration: 0.18 }, t)
-          .to('.fdot[data-d="' + n + '"]', { opacity: 1, ease: "none", duration: 0.18 }, t + 0.02);
-        if (n < 3) {
+          .fromTo(f + " .fc-rule", { scaleX: 0 }, { scaleX: 1, ease: "none", duration: 0.45 }, t + 0.32)
+          .to(".fdot", { opacity: 0.35, scale: 1, ease: "none", duration: 0.18 }, t)
+          .to('.fdot[data-d="' + n + '"]', { opacity: 1, scale: 1.5, ease: "none", duration: 0.18 }, t + 0.02);
+        if (n < 5) {
           heroTl
             .to(f + " .fc-item", { y: -40, autoAlpha: 0, stagger: 0.06, ease: "none", duration: 0.3 }, t + 0.92)
             .to(f, { autoAlpha: 0, ease: "none", duration: 0.42 }, t + 1.04);
@@ -1455,11 +1484,11 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
 
       heroTl
         // Ato 3 — véu escurece o último frame e o convite final entra
-        .to('.frame[data-f="3"] .fc-item', { y: -40, autoAlpha: 0, stagger: 0.05, ease: "none", duration: 0.3 }, 3.9)
-        .to(".frame-dots", { autoAlpha: 0, ease: "none", duration: 0.25 }, 3.9)
-        .to(".hero-dim", { autoAlpha: 1, ease: "none", duration: 0.4 }, 3.95)
-        .to(heroFinal, { opacity: 1, ease: "none", duration: 0.4 }, 4.1)
-        .fromTo(".hf-item", { y: 34, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.12, ease: "none", duration: 0.5 }, 4.2);
+        .to('.frame[data-f="5"] .fc-item', { y: -40, autoAlpha: 0, stagger: 0.05, ease: "none", duration: 0.3 }, 5.94)
+        .to(".frame-dots", { autoAlpha: 0, ease: "none", duration: 0.25 }, 5.94)
+        .to(".hero-dim", { autoAlpha: 1, ease: "none", duration: 0.4 }, 6.0)
+        .to(heroFinal, { opacity: 1, ease: "none", duration: 0.4 }, 6.15)
+        .fromTo(".hf-item", { y: 34, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.12, ease: "none", duration: 0.5 }, 6.25);
     })();
   }
 

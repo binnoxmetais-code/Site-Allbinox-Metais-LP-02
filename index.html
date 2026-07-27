@@ -170,7 +170,7 @@ section{padding-block:60px;position:relative}
 .hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:end}
 @media(min-width:1024px){.hero-grid{grid-template-columns:1.55fr 1fr;gap:64px}}
 .hero-headline{font-weight:300;line-height:.98;letter-spacing:-.02em}
-.hero-mask{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.16em}
+.hero-mask{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.16em;padding-inline:.75em;margin-inline:-.75em}
 .hero-line{display:block;overflow:visible;will-change:transform}
 .hero-l1{font-family:var(--font-body);font-weight:700;font-size:clamp(3rem,11vw,9.5rem);text-transform:uppercase;letter-spacing:-.03em}
 .hero-l2{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(2.6rem,9.5vw,8.25rem);margin:.02em 0 .04em .04em}
@@ -198,19 +198,40 @@ section{padding-block:60px;position:relative}
 .btn-ghost:hover{border-color:var(--chrome);transform:translateY(-3px)}
 .btn svg{width:18px;height:18px;flex:0 0 auto}
 
-.hero-visual{position:relative;display:none}
+.hero .hero-grid > div:first-child{position:relative;z-index:1}
+.hero-visual{position:relative;display:none;z-index:2}
 @media(min-width:1024px){.hero-visual{display:block}}
 .hero-photo{
   border-radius:200px 200px 24px 24px;overflow:hidden;
   border:1px solid var(--border);
   aspect-ratio:9/13.4;max-height:64vh;margin-left:auto;width:min(340px,100%);
-  position:relative;
+  position:relative;will-change:transform;
 }
 .hero-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.06)}
+.hero-img-b{position:absolute;inset:0;opacity:0}
+.hero-veil{
+  position:absolute;inset:0;background:rgba(11,10,14,.62);opacity:0;z-index:2;pointer-events:none;
+}
 .hero-photo::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,0) 55%,rgba(11,10,14,.55) 100%);
 }
+.hero-final{
+  position:absolute;inset:0;z-index:3;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:20px;
+  text-align:center;opacity:0;pointer-events:none;visibility:hidden;padding:0 6vw;
+}
+@media(min-width:1024px){.hero-final{display:flex}}
+.hero-final.on{pointer-events:auto;visibility:visible}
+.hero-final .hf-big{
+  font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;
+  font-size:clamp(2.5rem,6.4vw,5.5rem);line-height:1;
+}
+.hero-final .hf-sub{
+  font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(1.75rem,4vw,3.25rem);line-height:1.1;margin-top:-6px;
+}
+.hero-final .hero-ctas{justify-content:center;margin-top:18px}
 .hero-photo-caption{
   position:absolute;bottom:20px;left:24px;right:24px;z-index:2;
   display:flex;justify-content:space-between;align-items:center;
@@ -622,8 +643,10 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         </div>
       </div>
       <div class="hero-visual">
-        <figure class="hero-photo">
+        <figure class="hero-photo" id="heroPhoto">
           <img src="assets/lixeira-pedal.jpg" alt="Lixeira de pedal em aço inox polido em ambiente de alto padrão" fetchpriority="high" decoding="async">
+          <img class="hero-img-b" src="assets/hero-noturna.jpg" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <div class="hero-veil" aria-hidden="true"></div>
           <figcaption class="hero-photo-caption">
             <span class="label" style="color:var(--text)">Linha Premium</span>
             <span class="label">Inox polido</span>
@@ -637,6 +660,16 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
       </span>
       <span class="label" style="display:none" data-show-desktop>288 produtos de linha</span>
+    </div>
+  </div>
+
+  <div class="hero-final" id="heroFinal">
+    <p class="label hf-item"><span class="paren">(</span>&nbsp;Fábrica própria — Suzano · SP&nbsp;<span class="paren">)</span></p>
+    <p class="hf-big chrome-text hf-item">288 produtos de linha</p>
+    <p class="hf-sub violet-text hf-item">prontos para o seu projeto</p>
+    <div class="hero-ctas hf-item">
+      <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20ALLBINOX%20e%20quero%20um%20or%C3%A7amento." target="_blank" rel="noopener">Solicitar orçamento</a>
+      <a class="btn btn-ghost" href="#vitrine">Ver a vitrine</a>
     </div>
   </div>
 </section>
@@ -1262,6 +1295,66 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
     gsap.from(".hero-visual", { x: 60, opacity: 0, duration: 1.2, delay: 0.4, ease: "expo.out" });
     gsap.from(".hero-meta", { opacity: 0, y: 20, duration: 0.8, delay: 0.9, ease: "power3.out" });
     gsap.from(".nav-inner", { y: -24, opacity: 0, duration: 0.9, delay: 0.1, ease: "power3.out" });
+  }
+
+  // ---------- HERO: scrollytelling (pin + scrub em 3 cenas) ----------
+  // Criado no mesmo tick que o pin do manifesto (ordem de documento) para o
+  // ScrollTrigger acomodar os dois pin-spacers corretamente no refresh inicial.
+  // immediateRender:false nos tweens que tocam elementos da animação de entrada:
+  // o valor inicial só é capturado quando o scroll alcança o tween (entrada já concluída).
+  if (hasST && !isMobile && !reduceMotion && window.matchMedia("(min-width: 1024px)").matches) {
+    (function(){
+      var heroFinal = document.getElementById("heroFinal");
+      var photo = document.getElementById("heroPhoto");
+      if (!heroFinal || !photo) return;
+
+      var heroTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "+=2300",
+          pin: true,
+          scrub: 0.7,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: function(self){
+            heroFinal.classList.toggle("on", self.progress > 0.72);
+          }
+        }
+      });
+
+      // Cena 1 — a tipografia se abre e o apoio sai
+      heroTl
+        .to(".hero-l1", { xPercent: -8, y: -26, ease: "none" }, 0)
+        .to(".hero-l2", { xPercent: 8, ease: "none" }, 0)
+        .to(".hero-l3", { xPercent: -5, ease: "none" }, 0)
+        .to(".hero-l4", { xPercent: 9, y: 24, ease: "none" }, 0)
+        .to(".hero-sub", { opacity: 0, y: 30, ease: "none", duration: 0.55, immediateRender: false }, 0)
+        .to(".hero-meta", { opacity: 0, ease: "none", duration: 0.55, immediateRender: false }, 0.1)
+
+        // Cena 2 — o arco viaja ao centro do palco e vira a cena noturna
+        .to(photo, {
+          x: function(){
+            var r = photo.getBoundingClientRect();
+            return (window.innerWidth / 2) - (r.left + r.width / 2);
+          },
+          y: -20,
+          scale: 1.6,
+          ease: "none",
+          duration: 1.1,
+          immediateRender: false
+        }, 0.5)
+        .to(".hero-img-b", { opacity: 1, ease: "none", duration: 0.7 }, 0.75)
+        .to(".hero-photo-caption", { opacity: 0, ease: "none", duration: 0.3 }, 0.6)
+        .to(".hero-headline", { opacity: 0.13, ease: "none", duration: 0.9 }, 0.55)
+
+        // Cena 3 — o convite final por cima do portal
+        .to(".hero-veil", { opacity: 1, ease: "none", duration: 0.6 }, 1.55)
+        .to(heroFinal, { opacity: 1, ease: "none", duration: 0.45 }, 1.7)
+        // fromTo (e não from): com invalidateOnRefresh, from() re-captura o "fim"
+        // já estampado em 0 e anima 0->0. Extremos explícitos são à prova de refresh.
+        .fromTo(".hf-item", { y: 34, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.12, ease: "none", duration: 0.5 }, 1.75);
+    })();
   }
 
   // ---------- MANIFESTO: pin + preenchimento por palavra ----------

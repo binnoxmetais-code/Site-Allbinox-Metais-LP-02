@@ -157,8 +157,10 @@ section{padding-block:60px;position:relative}
 
 /* ============ HERO ============ */
 .hero{
-  min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;
-  padding-top:120px;padding-bottom:48px;overflow:hidden;position:relative;
+  height:100vh;height:100svh;min-height:560px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding-top:clamp(76px,10vh,120px);padding-bottom:clamp(20px,3.6vh,44px);
+  overflow:hidden;position:relative;
 }
 .hero-bg{
   position:absolute;inset:-2% -2% -2% -2%;z-index:-1;
@@ -172,14 +174,18 @@ section{padding-block:60px;position:relative}
 .hero-headline{font-weight:300;line-height:.98;letter-spacing:-.02em}
 .hero-mask{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.16em;padding-inline:.75em;margin-inline:-.75em}
 .hero-line{display:block;overflow:visible;will-change:transform}
-.hero-l1{font-family:var(--font-body);font-weight:700;font-size:clamp(3rem,11vw,9.5rem);text-transform:uppercase;letter-spacing:-.03em}
-.hero-l2{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(2.6rem,9.5vw,8.25rem);margin:.02em 0 .04em .04em}
-.hero-l3{font-family:var(--font-display);font-weight:300;font-size:clamp(2rem,6.4vw,5.5rem);color:var(--muted)}
+.hero-l1{font-family:var(--font-body);font-weight:700;font-size:clamp(2.75rem,min(11vw,13vh),9.5rem);text-transform:uppercase;letter-spacing:-.03em}
+.hero-l2{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(2.4rem,min(9.5vw,11vh),8.25rem);margin:.02em 0 .04em .04em}
+.hero-l3{font-family:var(--font-display);font-weight:300;font-size:clamp(1.8rem,min(6.4vw,7.2vh),5.5rem);color:var(--muted)}
 .hero-l3 .num{font-family:var(--font-body);font-weight:300;font-size:.5em;vertical-align:super;color:var(--violet-light)}
-.hero-l4{font-family:var(--font-body);font-weight:700;font-size:clamp(3rem,11vw,9.5rem);text-transform:uppercase;letter-spacing:-.03em}
+.hero-l4{font-family:var(--font-body);font-weight:700;font-size:clamp(2.75rem,min(11vw,13vh),9.5rem);text-transform:uppercase;letter-spacing:-.03em}
 .hero-sub{
-  margin-top:40px;max-width:520px;color:var(--muted);
-  display:flex;flex-direction:column;gap:24px;
+  margin-top:clamp(14px,3.2vh,40px);max-width:520px;color:var(--muted);
+  display:flex;flex-direction:column;gap:clamp(12px,2.4vh,24px);
+}
+@media(min-width:1024px) and (max-height:800px){
+  .hero-sub p{font-size:.9375rem;max-width:470px}
+  .btn{padding:13px 26px;font-size:.875rem}
 }
 .hero-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
 .btn{
@@ -204,7 +210,7 @@ section{padding-block:60px;position:relative}
 .hero-photo{
   border-radius:200px 200px 24px 24px;overflow:hidden;
   border:1px solid var(--border);
-  aspect-ratio:9/13.4;max-height:64vh;margin-left:auto;width:min(340px,100%);
+  aspect-ratio:9/13.4;max-height:58vh;margin-left:auto;width:min(340px,100%);
   position:relative;will-change:transform;
 }
 .hero-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.06)}
@@ -225,11 +231,11 @@ section{padding-block:60px;position:relative}
 .hero-final.on{pointer-events:auto;visibility:visible}
 .hero-final .hf-big{
   font-family:var(--font-body);font-weight:700;text-transform:uppercase;letter-spacing:-.02em;
-  font-size:clamp(2.5rem,6.4vw,5.5rem);line-height:1;
+  font-size:clamp(2.25rem,min(6.4vw,9vh),5.5rem);line-height:1;
 }
 .hero-final .hf-sub{
   font-family:var(--font-display);font-style:italic;font-weight:300;
-  font-size:clamp(1.75rem,4vw,3.25rem);line-height:1.1;margin-top:-6px;
+  font-size:clamp(1.5rem,min(4vw,5.6vh),3.25rem);line-height:1.1;margin-top:-6px;
 }
 .hero-final .hero-ctas{justify-content:center;margin-top:18px}
 .hero-photo-caption{
@@ -238,7 +244,7 @@ section{padding-block:60px;position:relative}
 }
 .hero-meta{
   display:flex;justify-content:space-between;align-items:center;gap:24px;
-  margin-top:56px;padding-top:24px;border-top:1px solid var(--border);
+  margin-top:clamp(16px,4vh,56px);padding-top:clamp(12px,2.4vh,24px);border-top:1px solid var(--border);
 }
 .hero-meta .label{display:flex;gap:8px;align-items:center}
 .scroll-hint{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}
@@ -624,7 +630,7 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
   <div class="container">
     <div class="hero-grid">
       <div>
-        <p class="label" style="margin-bottom:28px"><span class="paren">(</span>&nbsp;Soluções profissionais em aço inox&nbsp;<span class="paren">)</span></p>
+        <p class="label" style="margin-bottom:clamp(12px,2.6vh,28px)"><span class="paren">(</span>&nbsp;Soluções profissionais em aço inox&nbsp;<span class="paren">)</span></p>
         <h1 class="hero-headline">
           <span class="hero-mask"><span class="hero-line hero-l1 chrome-text">A força</span></span>
           <span class="hero-mask"><span class="hero-line hero-l2 violet-text">do inox</span></span>
@@ -1334,12 +1340,22 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
 
         // Cena 2 — o arco viaja ao centro do palco e vira a cena noturna
         .to(photo, {
+          // centraliza o portal em relação à SEÇÃO (que ocupa 100svh no pin) —
+          // medidas relativas entre retângulos são independentes do scroll.
           x: function(){
+            var h = document.querySelector(".hero").getBoundingClientRect();
             var r = photo.getBoundingClientRect();
-            return (window.innerWidth / 2) - (r.left + r.width / 2);
+            return (h.left + h.width / 2) - (r.left + r.width / 2);
           },
-          y: -20,
-          scale: 1.6,
+          y: function(){
+            var h = document.querySelector(".hero").getBoundingClientRect();
+            var r = photo.getBoundingClientRect();
+            return (h.top + h.height / 2) - (r.top + r.height / 2);
+          },
+          scale: function(){
+            // portal cresce até ~86% da altura da tela, sem vazar
+            return Math.min(1.6, (window.innerHeight * 0.86) / photo.offsetHeight);
+          },
           ease: "none",
           duration: 1.1,
           immediateRender: false

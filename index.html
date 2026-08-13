@@ -187,6 +187,33 @@ section{padding-block:60px;position:relative}
   .hero-sub p{font-size:.9375rem;max-width:470px}
   .btn{padding:13px 26px;font-size:.875rem}
 }
+/* A hero é presa (pin) e alinhada embaixo — o que não couber transborda pra
+   CIMA, passando por baixo do menu fixo. Em telas baixas o tipo precisa
+   encolher de verdade, não só um pouco: os limites em vh abaixo garantem que
+   o bloco inteiro caiba entre o menu e a base, com respiro. */
+@media(min-width:1024px) and (max-height:920px){
+  .hero{padding-top:clamp(92px,11.5vh,124px)}
+  .hero-l1,.hero-l4{font-size:clamp(2.4rem,min(9vw,11vh),5.6rem)}
+  .hero-l2{font-size:clamp(2.1rem,min(7.8vw,9.4vh),4.8rem)}
+  .hero-l3{font-size:clamp(1.5rem,min(5.2vw,6.2vh),3.2rem)}
+}
+@media(min-width:1024px) and (max-height:760px){
+  .hero{padding-top:clamp(88px,13vh,116px)}
+  .hero-l1,.hero-l4{font-size:clamp(2rem,min(7.6vw,9.6vh),4.6rem)}
+  .hero-l2{font-size:clamp(1.8rem,min(6.6vw,8.2vh),4rem)}
+  .hero-l3{font-size:clamp(1.3rem,min(4.4vw,5.4vh),2.7rem)}
+  .hero-sub{margin-top:12px;gap:10px}
+  .hero-sub p{font-size:.875rem;max-width:440px}
+  .hero-ctas{margin-top:2px;gap:12px}
+  .btn{padding:12px 22px;font-size:.8125rem}
+}
+@media(min-width:1024px) and (max-height:640px){
+  .hero-l1,.hero-l4{font-size:min(8.4vh,3.4rem)}
+  .hero-l2{font-size:min(7.2vh,3rem)}
+  .hero-l3{font-size:min(4.8vh,2rem)}
+  .hero-sub p{font-size:.8125rem}
+  .hero-mosaic{height:min(50vh,340px)}
+}
 .hero-ctas{display:flex;flex-wrap:wrap;gap:16px;margin-top:8px}
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:10px;
@@ -212,24 +239,30 @@ section{padding-block:60px;position:relative}
    parallax (data-depth) no scroll e no movimento do mouse, criando
    profundidade real em vez de uma foto chapada.
    Toda moldura usa a proporção exata do arquivo: nada é recortado. */
+/* Composição em flex (e não posicionamento absoluto): assim a sobreposição
+   entre as peças é impossível por construção — cada produto aparece inteiro,
+   com respiro. Uma peça principal alta + duas quadradas em coluna. */
 .hero-mosaic{
-  position:relative;height:min(62vh,520px);width:100%;max-width:420px;margin-left:auto;
+  position:relative;width:100%;max-width:460px;margin-left:auto;
+  height:min(56vh,440px);
+  display:flex;align-items:center;justify-content:flex-end;gap:16px;
+}
+.hero-col{
+  display:flex;flex-direction:column;justify-content:center;gap:16px;
+  width:32%;flex:0 0 auto;
 }
 .hero-tile{
-  position:absolute;overflow:hidden;border:1px solid var(--border);
-  border-radius:14px;will-change:transform;
-  box-shadow:0 22px 60px rgba(0,0,0,.42);
-  background:var(--surface);
+  position:relative;overflow:hidden;border:1px solid var(--border);
+  border-radius:14px;will-change:transform;background:var(--surface);
+  box-shadow:0 20px 54px rgba(0,0,0,.45);
 }
 .hero-tile img{width:100%;height:100%;object-fit:cover;display:block}
-/* prev-*.jpg são 720x960 (3/4) · galeria/*.jpg são 800x800 (1/1) */
-.hero-tile.t1{right:0;top:4%;width:58%;aspect-ratio:860/1400;z-index:3;border-radius:120px 120px 14px 14px}
-.hero-tile.t2{left:0;top:26%;width:39%;aspect-ratio:1/1;z-index:4}
-.hero-tile.t3{right:12%;bottom:2%;width:34%;aspect-ratio:1/1;z-index:5}
-.hero-tile.t4{left:14%;top:2%;width:26%;aspect-ratio:1/1;z-index:2;opacity:.86}
+/* cada moldura na proporção exata do arquivo: nada de recorte */
+.hero-tile.t1{height:100%;aspect-ratio:860/1400;flex:0 0 auto;border-radius:110px 110px 14px 14px}
+.hero-col .hero-tile{width:100%;aspect-ratio:1/1}
 .hero-tile::after{
   content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg,rgba(11,10,14,0) 60%,rgba(11,10,14,.45) 100%);
+  background:linear-gradient(180deg,rgba(11,10,14,0) 62%,rgba(11,10,14,.4) 100%);
 }
 .hero-photo::after{
   content:"";position:absolute;inset:0;
@@ -801,17 +834,16 @@ button:focus-visible{
       </div>
       <div class="hero-visual">
         <div class="hero-mosaic" id="heroPhoto">
+          <div class="hero-col">
+            <figure class="hero-tile t2" data-depth="1.7">
+              <img src="assets/galeria/sel-2.jpg" alt="Conjunto de coleta seletiva em aço inox" decoding="async">
+            </figure>
+            <figure class="hero-tile t3" data-depth="2.3">
+              <img src="assets/galeria/uti-1.jpg" alt="Porta guarda-chuvas em aço inox" decoding="async">
+            </figure>
+          </div>
           <figure class="hero-tile t1" data-depth="1">
             <img src="assets/lixeira-pedal.jpg" alt="Lixeira de pedal em aço inox polido em ambiente de alto padrão" fetchpriority="high" decoding="async">
-          </figure>
-          <figure class="hero-tile t2" data-depth="1.9">
-            <img src="assets/galeria/sel-2.jpg" alt="Conjunto de coleta seletiva em aço inox" decoding="async">
-          </figure>
-          <figure class="hero-tile t3" data-depth="2.7">
-            <img src="assets/galeria/bit-2.jpg" alt="Bituqueira em aço inox para área externa" decoding="async">
-          </figure>
-          <figure class="hero-tile t4" data-depth="0.5">
-            <img src="assets/galeria/uti-1.jpg" alt="Porta guarda-chuvas em aço inox" decoding="async">
           </figure>
         </div>
       </div>
@@ -2110,8 +2142,10 @@ button:focus-visible{
                 var nx = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2);
                 var ny = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2);
                 setters.forEach(function(s){
-                  s.x(nx * 9 * s.d);
-                  s.y(ny * 7 * s.d);
+                  /* amplitude curta de propósito: o vão entre as peças é de
+                     16px, então o movimento nunca encosta uma na outra */
+                  s.x(nx * 4 * s.d);
+                  s.y(ny * 3.4 * s.d);
                 });
               };
               window.addEventListener("mousemove", onMove, { passive: true });

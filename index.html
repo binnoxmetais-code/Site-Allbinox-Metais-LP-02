@@ -210,10 +210,12 @@ section{padding-block:60px;position:relative}
 .hero-photo{
   border-radius:200px 200px 24px 24px;overflow:hidden;
   border:1px solid var(--border);
-  aspect-ratio:9/13.4;max-height:58vh;margin-left:auto;width:min(340px,100%);
+  /* proporção idêntica ao arquivo (860x1400). Sem max-height: um clamp de altura
+     quebraria a razão e o cover voltaria a recortar o produto. */
+  aspect-ratio:860/1400;margin-left:auto;width:min(300px,100%);
   position:relative;will-change:transform;
 }
-.hero-photo img{width:100%;height:100%;object-fit:cover;transform:scale(1.06)}
+.hero-photo img{width:100%;height:100%;object-fit:cover}
 .hero-photo::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,0) 55%,rgba(11,10,14,.55) 100%);
@@ -321,8 +323,20 @@ section{padding-block:60px;position:relative}
 @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* ============ MANIFESTO (pin + scrub) ============ */
-.manifesto{background:var(--bg)}
-.manifesto-inner{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:48px}
+.manifesto{background:var(--bg);position:relative;overflow:hidden}
+.manifesto-inner{min-height:70vh;display:flex;flex-direction:column;justify-content:center;gap:48px;position:relative;z-index:1}
+
+/* Palco WebGL: inox de verdade, renderizado em tempo real.
+   Só existe no desktop — a lib nem chega a ser baixada em telas menores
+   nem para quem pede movimento reduzido (ver initInox no script). */
+.inox-stage{
+  position:absolute;top:0;right:0;bottom:0;width:46%;z-index:0;
+  pointer-events:none;display:none;opacity:0;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 32%,#000 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 32%,#000 100%);
+}
+@media(min-width:1024px) and (prefers-reduced-motion:no-preference){.inox-stage{display:block}}
+.inox-stage canvas{width:100%;height:100%;display:block;background:none}
 .manifesto-text{
   font-family:var(--font-display);font-weight:300;
   font-size:clamp(1.6rem,3.6vw,3.25rem);line-height:1.32;letter-spacing:-.01em;
@@ -405,7 +419,8 @@ section{padding-block:60px;position:relative}
 .line-preview img.on{opacity:1}
 .line-thumbs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:40px}
 @media(min-width:1024px){.line-thumbs{display:none}}
-.line-thumbs figure{border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative;aspect-ratio:4/5}
+/* prev-*.jpg são 720x960 = 3/4 exato */
+.line-thumbs figure{border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative;aspect-ratio:3/4}
 .line-thumbs img{width:100%;height:100%;object-fit:cover}
 .line-thumbs figcaption{
   position:absolute;left:12px;bottom:10px;font-size:.6875rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text);
@@ -510,9 +525,13 @@ section{padding-block:60px;position:relative}
 @media(min-width:1024px){.brand-grid{grid-template-columns:1fr 1fr;gap:80px}}
 .brand-photo{
   border-radius:24px;overflow:hidden;border:1px solid var(--border);
-  aspect-ratio:4/3.4;position:relative;
+  /* showroom.jpg é 1600x1600: moldura 1/1 evita o corte de ~15% da altura.
+     Os 110% de altura são só o overscan do parallax (±5% de folga). */
+  aspect-ratio:1/1;position:relative;
 }
-.brand-photo img{width:100%;height:112%;object-fit:cover;will-change:transform}
+/* overscan centrado (6% em cima, 6% embaixo) — o parallax abaixo anda ±5%,
+   então nenhuma borda descobre e o enquadramento nunca "anda" pro produto */
+.brand-photo img{width:100%;height:112%;margin-top:-6%;object-fit:cover;will-change:transform}
 .brand-copy{display:flex;flex-direction:column;gap:24px}
 .brand-copy .section-title em{font-style:italic;font-weight:300}
 .brand-copy p{color:var(--muted);max-width:520px}
@@ -538,8 +557,8 @@ section{padding-block:60px;position:relative}
   transition:transform .45s var(--ease),border-color .45s var(--ease);
 }
 .wall-card:hover{transform:translateY(-8px) rotate(-.5deg);border-color:var(--violet)}
-.wall-card img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:top}
-.wall-card.tall img{aspect-ratio:9/12}
+/* todas as fotos do wall são 800x800 — 1/1 em todos os cards, sem corte lateral */
+.wall-card img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:center}
 
 /* ============ DIFERENCIAIS ============ */
 .why-grid{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--border)}
@@ -821,6 +840,7 @@ button:focus-visible{
 
 <!-- ============ MANIFESTO ============ -->
 <section class="manifesto" id="manifesto">
+  <div class="inox-stage" id="inoxStage" aria-hidden="true"></div>
   <div class="container manifesto-inner">
     <p class="label"><span class="paren">(</span>&nbsp;Manifesto&nbsp;<span class="paren">)</span></p>
     <p class="manifesto-text" id="manifestoText">A ALLBINOX METAIS existe para elevar o padrão dos ambientes profissionais. Projetamos e fabricamos, no Brasil, lixeiras e utilitários em aço inox que unem durabilidade real, higiene e presença estética — do hall corporativo à cozinha profissional. Uma marca forte, moderna e preparada para o futuro.</p>
@@ -1751,10 +1771,11 @@ button:focus-visible{
       if (context.conditions.isCompact || context.conditions.reduceMotion) return;
       var bp = document.getElementById("brandParallax");
       if (!bp) return;
-      gsap.to(bp, {
-        yPercent: -10, ease: "none",
-        scrollTrigger: { trigger: ".brand-photo", start: "top bottom", end: "bottom top", scrub: true }
-      });
+      gsap.fromTo(bp,
+        { yPercent: -5 },
+        { yPercent: 5, ease: "none",
+          scrollTrigger: { trigger: ".brand-photo", start: "top bottom", end: "bottom top", scrub: true } }
+      );
     });
   }
 
@@ -1789,6 +1810,171 @@ button:focus-visible{
         "\n\nPode me enviar um orçamento?";
       window.open("https://wa.me/5511978791851?text=" + encodeURIComponent(texto), "_blank", "noopener");
     });
+  }
+
+  /* ================= CENA INOX (WebGL) =================
+     O produto da ALLBINOX é aço inox polido — então o manifesto ganha inox
+     de verdade: um corpo cilíndrico (a silhueta da lixeira) com material
+     metálico real, refletindo um ambiente de estúdio gerado por código.
+
+     Três decisões que sustentam o efeito:
+     1. Metal SEM environment map renderiza preto. O reflexo é o material —
+        por isso o env map procedural abaixo, passado pelo PMREMGenerator
+        para que o reflexo respeite a rugosidade.
+     2. A lib (~600 KB) é baixada SOB DEMANDA: só no desktop, só quando o
+        manifesto se aproxima da viewport. Mobile e quem pede movimento
+        reduzido nunca pagam esse custo.
+     3. Rotação amarrada ao scroll — a mesma linguagem de scrollytelling do
+        hero — com respiro contínuo suave por cima. Sem overshoot: metal
+        não quica. */
+  var inoxStage = document.getElementById("inoxStage");
+  var inoxWanted = inoxStage &&
+    window.matchMedia("(min-width: 1024px)").matches &&
+    !reduceMotion &&
+    hasST;
+
+  function buildInoxEnv(THREE){
+    /* Estúdio em canvas: faixas de luz que o cromo tem o que refletir.
+       Cromo sem variação no entorno fica chapado e sem leitura. */
+    var c = document.createElement("canvas");
+    c.width = 512; c.height = 256;
+    var x = c.getContext("2d");
+    var g = x.createLinearGradient(0, 0, 0, 256);
+    g.addColorStop(0.00, "#2A2440");
+    g.addColorStop(0.34, "#EFEDF6");
+    g.addColorStop(0.52, "#6E6A82");
+    g.addColorStop(1.00, "#08070C");
+    x.fillStyle = g; x.fillRect(0, 0, 512, 256);
+    x.fillStyle = "rgba(255,255,255,.92)";
+    x.fillRect(46, 74, 150, 20);
+    x.fillRect(300, 60, 104, 12);
+    x.fillStyle = "rgba(168,85,247,.55)";
+    x.fillRect(196, 128, 190, 9);
+    x.fillStyle = "rgba(124,58,237,.4)";
+    x.fillRect(24, 150, 90, 7);
+    var t = new THREE.CanvasTexture(c);
+    t.mapping = THREE.EquirectangularReflectionMapping;
+    return t;
+  }
+
+  function initInox(){
+    if (typeof THREE === "undefined" || !inoxStage) return;
+    var renderer, scene, camera, mesh, geo, mat, envRT, rawEnv, pmrem, frame, st;
+    try {
+      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "low-power" });
+    } catch (e) { return; } /* sem WebGL: seção segue como estava */
+
+    var w = inoxStage.clientWidth || 1, h = inoxStage.clientHeight || 1;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(w, h);
+    if ("outputEncoding" in renderer && THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
+    if (THREE.ACESFilmicToneMapping) { renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05; }
+    inoxStage.appendChild(renderer.domElement);
+
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(34, w / h, 0.1, 100);
+    camera.position.set(0, 0, 7.2);
+
+    rawEnv = buildInoxEnv(THREE);
+    try {
+      pmrem = new THREE.PMREMGenerator(renderer);
+      pmrem.compileEquirectangularShader();
+      envRT = pmrem.fromEquirectangular(rawEnv);
+      scene.environment = envRT.texture;
+    } catch (e) {
+      scene.environment = rawEnv; /* fallback: reflexo mais duro, mas metálico */
+    }
+
+    /* Corpo levemente cônico: a silhueta de uma lixeira de pedal */
+    geo = new THREE.CylinderGeometry(1.16, 1.03, 2.62, 128, 1, false);
+    mat = new THREE.MeshStandardMaterial({
+      color: 0xF2F2F5,
+      metalness: 1.0,      /* inox: metal puro */
+      roughness: 0.14,     /* polido, não espelho perfeito */
+      envMapIntensity: 1.15
+    });
+    mesh = new THREE.Mesh(geo, mat);
+    mesh.rotation.set(0.16, 0.5, 0.06);
+    scene.add(mesh);
+
+    var key = new THREE.DirectionalLight(0xffffff, 1.5);
+    key.position.set(3, 4.4, 5);
+    scene.add(key);
+    var rim = new THREE.DirectionalLight(0xA855F7, 1.1);
+    rim.position.set(-4.5, -1.6, -3);
+    scene.add(rim);
+
+    /* progresso do scroll → rotação (mesma gramática do hero) */
+    var scrollSpin = 0;
+    st = ScrollTrigger.create({
+      trigger: ".manifesto",
+      start: "top bottom",
+      end: "bottom top",
+      onUpdate: function(self){ scrollSpin = self.progress; }
+    });
+
+    gsap.to(inoxStage, { opacity: 1, duration: 1.1, ease: "power2.out" });
+
+    var t0 = (window.performance && performance.now) ? performance.now() : 0;
+    function render(now){
+      frame = requestAnimationFrame(render);
+      var t = ((now || 0) - t0) / 1000;
+      mesh.rotation.y = 0.5 + scrollSpin * Math.PI * 1.15 + t * 0.06;
+      mesh.position.y = Math.sin(t * 0.5) * 0.055;          /* respiro */
+      mesh.rotation.x = 0.16 + Math.sin(t * 0.34) * 0.025;
+      renderer.render(scene, camera);
+    }
+    frame = requestAnimationFrame(render);
+
+    function resize(){
+      var nw = inoxStage.clientWidth, nh = inoxStage.clientHeight;
+      if (!nw || !nh) return;
+      camera.aspect = nw / nh; camera.updateProjectionMatrix();
+      renderer.setSize(nw, nh);
+    }
+    window.addEventListener("resize", resize);
+
+    /* Descarte: página estática não desmonta, mas se o usuário ligar
+       "movimento reduzido" no sistema a cena sai de cena por completo. */
+    function destroy(){
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
+      if (st) st.kill();
+      geo.dispose(); mat.dispose();
+      if (rawEnv) rawEnv.dispose();
+      if (envRT) envRT.dispose();
+      if (pmrem) pmrem.dispose();
+      renderer.dispose();
+      if (renderer.domElement && renderer.domElement.parentNode) {
+        renderer.domElement.parentNode.removeChild(renderer.domElement);
+      }
+      inoxStage.style.opacity = 0;
+    }
+    var rmq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (rmq.addEventListener) rmq.addEventListener("change", function(e){ if (e.matches) destroy(); });
+  }
+
+  if (inoxWanted) {
+    /* Baixa a lib só quando o manifesto se aproxima.
+       IntersectionObserver (e não ScrollTrigger) porque ele avalia o estado
+       ATUAL do elemento: se a seção já estiver perto ao carregar, dispara na
+       hora. Um ScrollTrigger só dispararia ao cruzar o limite — e um gatilho
+       que já nasce "passado" nunca cruza, então nunca carregaria. */
+    var loadInox = function(){
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+      s.async = true;
+      s.onload = initInox;
+      s.onerror = function(){ /* CDN fora do ar: seção segue normal */ };
+      document.head.appendChild(s);
+    };
+    /* Espera todo o resto carregar e só então busca a lib, para não competir
+       com as imagens do hero. Sem IntersectionObserver de propósito: o IO
+       depende do compositor e fica mudo em aba oculta/em segundo plano, o que
+       deixaria a cena presa em "nunca carrega". setTimeout sempre dispara. */
+    var startInox = function(){ setTimeout(loadInox, 700); };
+    if (document.readyState === "complete") startInox();
+    else window.addEventListener("load", startInox);
   }
 })();
 </script>

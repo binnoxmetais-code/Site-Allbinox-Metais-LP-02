@@ -344,6 +344,9 @@ section{padding-block:60px;position:relative}
   font-family:var(--font-display);font-weight:300;
   font-size:clamp(1.75rem,4vw,3.5rem);line-height:1.1;letter-spacing:-.015em;max-width:640px;
 }
+/* máscara de reveal para headlines (mesmo princípio do .hero-mask, sem SplitType:
+   os <em> internos usam gradiente background-clip:text, que quebra se fatiado em spans) */
+.title-mask{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
 .numbers-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--border)}
 @media(min-width:900px){.numbers-grid{grid-template-columns:repeat(4,1fr)}}
 .num-cell{
@@ -638,6 +641,20 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
 }
 .wpp-float:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 16px 44px rgba(37,211,102,.55)}
 .wpp-float svg{width:28px;height:28px;fill:#fff}
+
+/* ============ FOCO DE TECLADO ============ */
+/* Campos de formulário já têm tratamento próprio (borda + glow); os demais
+   elementos interativos ganham um anel consistente com a marca. */
+a:focus-visible,
+button:focus-visible{
+  outline:2px solid var(--violet-light);
+  outline-offset:4px;
+  border-radius:4px;
+}
+.field input:focus-visible,.field select:focus-visible,.field textarea:focus-visible{
+  outline:2px solid var(--violet-light);
+  outline-offset:2px;
+}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
@@ -1317,6 +1334,17 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
   var hasST = hasGsap && typeof ScrollTrigger !== "undefined";
   if (hasST) gsap.registerPlugin(ScrollTrigger);
 
+  // ---------- Responsive/motion tiers ----------
+  // Instância única de matchMedia para os efeitos ligados a breakpoint (hero pin+scrub,
+  // manifesto pin+scrub, parallax do showroom). Substitui checagens feitas uma única vez
+  // no load por condições CSS nativas: reagem ao vivo se a janela cruzar o breakpoint
+  // (ex.: redimensionar a partir do devtools) ou se o usuário mudar a preferência de
+  // movimento do SO em tempo real — nenhum dos dois era possível com os booleans fixos.
+  // "(hover:hover) and (pointer:fine)" é o mesmo critério de "desktop de verdade" já
+  // usado no cursor customizado e nos botões magnéticos abaixo — evita ligar o scroll-jack
+  // em tablets touch largos, que só o teste de largura não pegaria.
+  var mm = hasGsap ? gsap.matchMedia() : null;
+
   // ---------- Lenis (scroll suave, desktop) ----------
   if (typeof Lenis !== "undefined" && !isMobile && !reduceMotion) {
     try {
@@ -1388,7 +1416,7 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
 
   // ---------- Cursor dot (desktop) ----------
   var dot = document.querySelector(".cursor-dot");
-  if (dot && window.matchMedia("(hover: hover) and (pointer: fine)").matches && hasGsap) {
+  if (dot && hasGsap && !reduceMotion && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
     var xTo = gsap.quickTo(dot, "x", { duration: 0.35, ease: "power3" });
     var yTo = gsap.quickTo(dot, "y", { duration: 0.35, ease: "power3" });
     window.addEventListener("mousemove", function(e){ xTo(e.clientX); yTo(e.clientY); });
@@ -1422,8 +1450,15 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
   // ScrollTrigger acomodar os dois pin-spacers corretamente no refresh inicial.
   // immediateRender:false nos tweens que tocam elementos da animação de entrada:
   // o valor inicial só é capturado quando o scroll alcança o tween (entrada já concluída).
-  if (hasST && !isMobile && !reduceMotion && window.matchMedia("(min-width: 1024px)").matches) {
-    (function(){
+  if (hasST && mm) {
+    mm.add({
+      isDesktop: "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+      reduceMotion: "(prefers-reduced-motion: reduce)"
+    }, function(context){
+      // Só monta o pin+scrub em desktop com ponteiro fino e sem preferência de
+      // menos movimento; reverte sozinho (GSAP mata tweens/ScrollTrigger e desfaz
+      // estilos inline) se a janela cruzar o breakpoint ou a preferência mudar ao vivo.
+      if (!context.conditions.isDesktop || context.conditions.reduceMotion) return;
       var heroFinal = document.getElementById("heroFinal");
       var photo = document.getElementById("heroPhoto");
       if (!heroFinal || !photo) return;
@@ -1489,12 +1524,12 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         .to(".hero-dim", { autoAlpha: 1, ease: "none", duration: 0.4 }, 6.0)
         .to(heroFinal, { opacity: 1, ease: "none", duration: 0.4 }, 6.15)
         .fromTo(".hf-item", { y: 34, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.12, ease: "none", duration: 0.5 }, 6.25);
-    })();
+    });
   }
 
   // ---------- MANIFESTO: pin + preenchimento por palavra ----------
   var manifestoText = document.getElementById("manifestoText");
-  if (manifestoText && hasST && typeof SplitType !== "undefined" && !reduceMotion) {
+  if (manifestoText && hasST && typeof SplitType !== "undefined") {
     try {
       var mSplit = new SplitType(manifestoText, { types: "words" });
       var accentWords = ["ALLBINOX","METAIS.","METAIS","inox","forte,","moderna","futuro."];
@@ -1502,30 +1537,46 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         w.classList.add("word");
         if (accentWords.indexOf(w.textContent.trim()) !== -1) w.classList.add("accent-w");
       });
-      if (!isMobile) {
-        var tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: "#manifesto",
-            start: "top top",
-            end: "+=1600",
-            pin: true,
-            scrub: 0.6,
-            anticipatePin: 1
+      var mColor = function(i, el){ return el.classList.contains("accent-w") ? "#A855F7" : "#F4F2F7"; };
+      if (mm) {
+        // Mesmo par de condições do hero acima — o pin só entra na mesma faixa
+        // "desktop" que libera o hero-visual (>=1024, ponteiro fino). Antes este
+        // bloco pinava a partir de 768px enquanto o hero só ligava a partir de
+        // 1024px: numa janela entre 769–1023px o manifesto prendia o scroll e o
+        // hero não fazia nada, uma inconsistência de craft. Unificado aqui.
+        mm.add({
+          isDesktop: "(min-width: 1024px) and (hover: hover) and (pointer: fine)",
+          reduceMotion: "(prefers-reduced-motion: reduce)"
+        }, function(context){
+          if (context.conditions.reduceMotion) {
+            // sem animação: palavras já no estado final, sem scrub nem pin
+            gsap.set(mSplit.words, { color: mColor });
+            gsap.set("#manifestoBadge", { opacity: 1, y: 0 });
+            return;
+          }
+          if (context.conditions.isDesktop) {
+            var tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: "#manifesto",
+                start: "top top",
+                end: "+=1600",
+                pin: true,
+                scrub: 0.6,
+                anticipatePin: 1
+              }
+            });
+            tl.to(mSplit.words, { color: mColor, stagger: 0.06, ease: "none", duration: 8 });
+            tl.from("#manifestoBadge", { opacity: 0, y: 24, duration: 1.2 }, ">-0.4");
+          } else {
+            gsap.to(mSplit.words, {
+              color: mColor,
+              stagger: 0.03,
+              scrollTrigger: { trigger: "#manifesto", start: "top 70%", end: "bottom 65%", scrub: 0.5 }
+            });
           }
         });
-        tl.to(mSplit.words, {
-          color: function(i, el){ return el.classList.contains("accent-w") ? "#A855F7" : "#F4F2F7"; },
-          stagger: 0.06,
-          ease: "none",
-          duration: 8
-        });
-        tl.from("#manifestoBadge", { opacity: 0, y: 24, duration: 1.2 }, ">-0.4");
       } else {
-        gsap.to(mSplit.words, {
-          color: function(i, el){ return el.classList.contains("accent-w") ? "#A855F7" : "#F4F2F7"; },
-          stagger: 0.03,
-          scrollTrigger: { trigger: "#manifesto", start: "top 70%", end: "bottom 65%", scrub: 0.5 }
-        });
+        manifestoText.style.color = "#F4F2F7";
       }
     } catch (e) {
       manifestoText.style.color = "#F4F2F7";
@@ -1552,6 +1603,13 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
         scrollTrigger: { trigger: block, start: "top 86%", toggleActions: "play none none none" }
       });
     });
+    // Ponte hero -> marquee: em vez de a tira surgir já 100% presente assim que o
+    // pin do hero solta, ela chega com um leve settle — o release do pin ganha
+    // continuidade em vez de um corte seco para o próximo bloco.
+    gsap.from(".word-marquee", {
+      opacity: 0, scale: 0.98, duration: 1, ease: "power2.out",
+      scrollTrigger: { trigger: ".word-marquee", start: "top 95%", toggleActions: "play none none none" }
+    });
     gsap.utils.toArray(".numbers-grid .num-cell, .why-grid .why-cell").forEach(function(cell, i){
       gsap.from(cell, {
         opacity: 0, y: 36, duration: 0.7, ease: "power3.out",
@@ -1574,9 +1632,26 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
     });
   }
 
-  // (Títulos de seção não usam SplitType: contêm <em> com gradiente
-  //  background-clip:text, que quebra ao fatiar em spans transformados.
-  //  Eles já entram pelo reveal em bloco acima.)
+  // ---------- HEADLINES: reveal mascarado, no nível do hero ----------
+  // Títulos de seção não usam SplitType: contêm <em> com gradiente
+  // background-clip:text, que quebra ao fatiar o texto em spans transformados
+  // (mesmo problema documentado no manifesto). Em vez de fatiar palavras,
+  // mascara-se o heading inteiro — igual à técnica do .hero-mask — e desliza-se
+  // o bloco por dentro de um overflow:hidden, sem tocar no texto/gradiente interno.
+  // O reveal em bloco acima (opacity/y do container .numbers-head etc.) continua
+  // valendo para o rótulo vizinho; o heading ganha essa camada extra de craft.
+  if (hasST && !reduceMotion) {
+    gsap.utils.toArray("h2.section-title, .cta-title").forEach(function(h){
+      var mask = document.createElement("span");
+      mask.className = "title-mask";
+      h.parentNode.insertBefore(mask, h);
+      mask.appendChild(h);
+      gsap.fromTo(h, { yPercent: 100 }, {
+        yPercent: 0, duration: 1.1, ease: "expo.out",
+        scrollTrigger: { trigger: mask, start: "top 88%", toggleActions: "play none none none" }
+      });
+    });
+  }
 
   // ---------- CONTADORES ----------
   if (hasST && !reduceMotion) {
@@ -1667,15 +1742,20 @@ footer{border-top:1px solid var(--border);padding:72px 0 40px;background:var(--b
     });
   });
 
-  // ---------- PARALLAX no showroom (desktop) ----------
-  if (hasST && !isMobile && !reduceMotion) {
-    var bp = document.getElementById("brandParallax");
-    if (bp) {
+  // ---------- PARALLAX no showroom ----------
+  if (hasST && mm) {
+    mm.add({
+      isCompact: "(max-width: 768px)",
+      reduceMotion: "(prefers-reduced-motion: reduce)"
+    }, function(context){
+      if (context.conditions.isCompact || context.conditions.reduceMotion) return;
+      var bp = document.getElementById("brandParallax");
+      if (!bp) return;
       gsap.to(bp, {
         yPercent: -10, ease: "none",
         scrollTrigger: { trigger: ".brand-photo", start: "top bottom", end: "bottom top", scrub: true }
       });
-    }
+    });
   }
 
   // ---------- Botões magnéticos (desktop) ----------

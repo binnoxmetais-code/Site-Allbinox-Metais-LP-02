@@ -207,15 +207,30 @@ section{padding-block:60px;position:relative}
 .hero .hero-grid > div:first-child{position:relative;z-index:1}
 .hero-visual{position:relative;display:none;z-index:2}
 @media(min-width:1024px){.hero-visual{display:block}}
-.hero-photo{
-  border-radius:200px 200px 24px 24px;overflow:hidden;
-  border:1px solid var(--border);
-  /* proporção idêntica ao arquivo (860x1400). Sem max-height: um clamp de altura
-     quebraria a razão e o cover voltaria a recortar o produto. */
-  aspect-ratio:860/1400;margin-left:auto;width:min(300px,100%);
-  position:relative;will-change:transform;
+/* ---- Mosaico em profundidade: 4 peças em planos diferentes ----
+   Substitui o retrato único. Cada peça tem sua própria velocidade de
+   parallax (data-depth) no scroll e no movimento do mouse, criando
+   profundidade real em vez de uma foto chapada.
+   Toda moldura usa a proporção exata do arquivo: nada é recortado. */
+.hero-mosaic{
+  position:relative;height:min(62vh,520px);width:100%;max-width:420px;margin-left:auto;
 }
-.hero-photo img{width:100%;height:100%;object-fit:cover}
+.hero-tile{
+  position:absolute;overflow:hidden;border:1px solid var(--border);
+  border-radius:14px;will-change:transform;
+  box-shadow:0 22px 60px rgba(0,0,0,.42);
+  background:var(--surface);
+}
+.hero-tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* prev-*.jpg são 720x960 (3/4) · galeria/*.jpg são 800x800 (1/1) */
+.hero-tile.t1{right:0;top:4%;width:58%;aspect-ratio:860/1400;z-index:3;border-radius:120px 120px 14px 14px}
+.hero-tile.t2{left:0;top:26%;width:39%;aspect-ratio:1/1;z-index:4}
+.hero-tile.t3{right:12%;bottom:2%;width:34%;aspect-ratio:1/1;z-index:5}
+.hero-tile.t4{left:14%;top:2%;width:26%;aspect-ratio:1/1;z-index:2;opacity:.86}
+.hero-tile::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,10,14,0) 60%,rgba(11,10,14,.45) 100%);
+}
 .hero-photo::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,0) 55%,rgba(11,10,14,.55) 100%);
@@ -307,6 +322,51 @@ section{padding-block:60px;position:relative}
 .scroll-hint{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.75rem;letter-spacing:.18em;text-transform:uppercase}
 .scroll-hint svg{width:14px;height:14px;animation:hintY 2.2s var(--ease) infinite}
 @keyframes hintY{0%,100%{transform:translateY(-2px);opacity:.5}50%{transform:translateY(3px);opacity:1}}
+
+/* Indicador de rolagem em Lottie (o SVG estático fica de reserva) */
+.lot-scroll{width:14px;height:34px;display:none}
+.lot-scroll.on{display:block}
+.lot-scroll.on + .hint-fallback{display:none}
+
+/* ============ TRILHO HORIZONTAL (imersão) ============
+   O scroll vertical move o trilho na horizontal — o corpo continua rolando
+   normalmente, então nada é sequestrado do usuário. Desktop apenas. */
+.rail{background:var(--bg-elevated);border-block:1px solid var(--border);overflow:hidden;padding-block:0}
+.rail-head{padding-block:60px 32px}
+@media(min-width:1024px){.rail-head{padding-block:120px 40px}}
+.rail-visor{position:relative}
+.rail-track{
+  display:flex;gap:20px;padding-inline:max(24px,calc(50vw - 620px));
+  padding-bottom:60px;will-change:transform;
+}
+@media(min-width:1024px){.rail-track{padding-bottom:120px;gap:28px}}
+/* sem JS (ou em telas menores) vira um carrossel nativo, com snap */
+@media(max-width:1023px){
+  .rail-visor{overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none}
+  .rail-visor::-webkit-scrollbar{display:none}
+  .rail-card{scroll-snap-align:center}
+}
+.rail-card{
+  flex:0 0 auto;width:min(300px,74vw);position:relative;
+  border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);
+  transition:border-color .4s var(--ease);
+}
+@media(min-width:1024px){.rail-card{width:340px}}
+.rail-card:hover{border-color:var(--violet)}
+/* galeria/*.jpg são 800x800 — moldura 1/1, sem recorte */
+.rail-card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.rail-card figcaption{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:14px 16px;font-size:.6875rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);
+}
+.rail-card figcaption b{color:var(--text);font-weight:500}
+.rail-progress{height:2px;background:var(--border);margin-inline:max(24px,calc(50vw - 620px));position:relative}
+.rail-progress i{
+  position:absolute;left:0;top:0;height:100%;width:100%;
+  background:linear-gradient(90deg,var(--violet),var(--violet-light));
+  transform:scaleX(0);transform-origin:0 50%;
+}
 
 /* ============ MARQUEE DE PALAVRAS ============ */
 .word-marquee{
@@ -740,19 +800,27 @@ button:focus-visible{
         </div>
       </div>
       <div class="hero-visual">
-        <figure class="hero-photo" id="heroPhoto">
-          <img src="assets/lixeira-pedal.jpg" alt="Lixeira de pedal em aço inox polido em ambiente de alto padrão" fetchpriority="high" decoding="async">
-          <figcaption class="hero-photo-caption">
-            <span class="label" style="color:var(--text)">Linha Premium</span>
-            <span class="label">Inox polido</span>
-          </figcaption>
-        </figure>
+        <div class="hero-mosaic" id="heroPhoto">
+          <figure class="hero-tile t1" data-depth="1">
+            <img src="assets/lixeira-pedal.jpg" alt="Lixeira de pedal em aço inox polido em ambiente de alto padrão" fetchpriority="high" decoding="async">
+          </figure>
+          <figure class="hero-tile t2" data-depth="1.9">
+            <img src="assets/galeria/sel-2.jpg" alt="Conjunto de coleta seletiva em aço inox" decoding="async">
+          </figure>
+          <figure class="hero-tile t3" data-depth="2.7">
+            <img src="assets/galeria/bit-2.jpg" alt="Bituqueira em aço inox para área externa" decoding="async">
+          </figure>
+          <figure class="hero-tile t4" data-depth="0.5">
+            <img src="assets/galeria/uti-1.jpg" alt="Porta guarda-chuvas em aço inox" decoding="async">
+          </figure>
+        </div>
       </div>
     </div>
     <div class="hero-meta">
       <span class="label">Fábrica própria — Suzano · SP</span>
       <span class="scroll-hint">Role para explorar
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+        <span class="lot-scroll" id="heroLottie" aria-hidden="true"></span>
+        <svg class="hint-fallback" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
       </span>
       <span class="label" style="display:none" data-show-desktop>288 produtos de linha</span>
     </div>
@@ -1044,6 +1112,31 @@ button:focus-visible{
       <a class="btn btn-ghost" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20receber%20o%20cat%C3%A1logo%20ALLBINOX%202026." target="_blank" rel="noopener">Receber o catálogo completo</a>
     </div>
   </div>
+</section>
+
+<!-- ============ TRILHO HORIZONTAL ============ -->
+<section class="rail" id="trilho">
+  <div class="container rail-head">
+    <p class="label"><span class="paren">(</span>&nbsp;Percorra a linha&nbsp;<span class="paren">)</span></p>
+    <h2 class="section-title" style="margin-top:16px">Doze peças, <em class="serif-i violet-text">um mesmo aço</em></h2>
+  </div>
+  <div class="rail-visor" id="railVisor">
+    <div class="rail-track" id="railTrack">
+      <figure class="rail-card"><img src="assets/galeria/lix-1.jpg" alt="Lixeira em aço inox de linha" loading="lazy" decoding="async"><figcaption><b>Lixeira inox</b><span>/ 01</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/sel-1.jpg" alt="Coleta seletiva em aço inox" loading="lazy" decoding="async"><figcaption><b>Coleta seletiva</b><span>/ 02</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-3.jpg" alt="Lixeira com pedal em aço inox" loading="lazy" decoding="async"><figcaption><b>Pedal</b><span>/ 03</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/bit-1.jpg" alt="Bituqueira em aço inox" loading="lazy" decoding="async"><figcaption><b>Bituqueira</b><span>/ 04</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-2.jpg" alt="Utilitário em aço inox" loading="lazy" decoding="async"><figcaption><b>Utilitário</b><span>/ 05</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/sel-4.jpg" alt="Conjunto de coleta seletiva" loading="lazy" decoding="async"><figcaption><b>Conjunto seletiva</b><span>/ 06</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-6.jpg" alt="Lixeira de grande capacidade em aço inox" loading="lazy" decoding="async"><figcaption><b>Grande volume</b><span>/ 07</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/bit-3.jpg" alt="Bituqueira de parede em aço inox" loading="lazy" decoding="async"><figcaption><b>Bituqueira</b><span>/ 08</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-4.jpg" alt="Porta guarda-chuvas em aço inox" loading="lazy" decoding="async"><figcaption><b>Guarda-chuvas</b><span>/ 09</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-5.jpg" alt="Lixeira quadrada em aço inox" loading="lazy" decoding="async"><figcaption><b>Quadrada</b><span>/ 10</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/sel-5.jpg" alt="Coleta seletiva com identificação por cores" loading="lazy" decoding="async"><figcaption><b>Identificação</b><span>/ 11</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-5.jpg" alt="Coletor de pilhas em aço inox" loading="lazy" decoding="async"><figcaption><b>Coletor de pilhas</b><span>/ 12</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="rail-progress" aria-hidden="true"><i id="railBar"></i></div>
 </section>
 
 <!-- ============ SEGMENTOS ============ -->
@@ -1976,6 +2069,144 @@ button:focus-visible{
     if (document.readyState === "complete") startInox();
     else window.addEventListener("load", startInox);
   }
+
+  /* ================= MOSAICO DA HERO: profundidade =================
+     Cada peça tem um "depth" próprio: quanto maior, mais ela se desloca.
+     Duas fontes de movimento somadas — o scroll (afasta as camadas) e o
+     ponteiro (inclina a composição). Sem overshoot: metal não quica. */
+  if (hasGsap && !reduceMotion) {
+    var tiles = gsap.utils.toArray(".hero-tile");
+    if (tiles.length) {
+      gsap.from(tiles, {
+        opacity: 0, y: 46, scale: 0.94, duration: 1.15,
+        stagger: 0.09, delay: 0.45, ease: "power3.out"
+      });
+
+      if (hasST && mm) {
+        mm.add("(min-width: 1024px)", function(){
+          /* scroll: as camadas se separam */
+          tiles.forEach(function(t){
+            var d = parseFloat(t.getAttribute("data-depth")) || 1;
+            gsap.to(t, {
+              yPercent: -7 * d, ease: "none",
+              scrollTrigger: { trigger: ".hero", start: "top top", end: "60% top", scrub: 0.6 }
+            });
+          });
+
+          /* ponteiro: inclina a composição (só onde há mouse de verdade) */
+          if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+            var mosaic = document.getElementById("heroPhoto");
+            if (mosaic) {
+              var setters = tiles.map(function(t){
+                var d = parseFloat(t.getAttribute("data-depth")) || 1;
+                return {
+                  x: gsap.quickTo(t, "x", { duration: 0.7, ease: "power3" }),
+                  y: gsap.quickTo(t, "y", { duration: 0.7, ease: "power3" }),
+                  d: d
+                };
+              });
+              var onMove = function(e){
+                var r = mosaic.getBoundingClientRect();
+                var nx = (e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2);
+                var ny = (e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2);
+                setters.forEach(function(s){
+                  s.x(nx * 9 * s.d);
+                  s.y(ny * 7 * s.d);
+                });
+              };
+              window.addEventListener("mousemove", onMove, { passive: true });
+              return function(){ window.removeEventListener("mousemove", onMove); };
+            }
+          }
+        });
+      }
+    }
+  }
+
+  /* ================= TRILHO HORIZONTAL =================
+     O scroll vertical vira deslocamento horizontal. A seção prende (pin)
+     apenas pela distância exata do trilho — nem um pixel além, para não
+     sequestrar a rolagem. Em telas menores nada disso é criado: lá o CSS
+     entrega um carrossel nativo com snap. */
+  if (hasST && mm && !reduceMotion) {
+    mm.add("(min-width: 1024px)", function(){
+      var track = document.getElementById("railTrack");
+      var rail  = document.getElementById("trilho");
+      var bar   = document.getElementById("railBar");
+      if (!track || !rail) return;
+
+      var dist = function(){ return Math.max(0, track.scrollWidth - window.innerWidth); };
+      if (dist() <= 0) return;
+
+      gsap.to(track, {
+        x: function(){ return -dist(); },
+        ease: "none", /* obrigatório: mantém o 1:1 entre scroll e posição */
+        scrollTrigger: {
+          trigger: rail,
+          start: "top top",
+          end: function(){ return "+=" + dist(); },
+          pin: true,
+          scrub: 0.6,
+          anticipatePin: 1,
+          invalidateOnRefresh: true, /* recalcula a distância ao redimensionar */
+          onUpdate: function(self){
+            if (bar) bar.style.transform = "scaleX(" + self.progress.toFixed(4) + ")";
+          }
+        }
+      });
+    });
+  }
+
+  /* ================= LOTTIE: indicador de rolagem =================
+     Animação embutida como objeto (animationData): a página segue
+     autocontida, sem buscar um .json. Um traço vertical desenhado por
+     trim path — a mesma gramática de cota técnica usada na LP de captação. */
+  (function(){
+    var host = document.getElementById("heroLottie");
+    if (!host || reduceMotion) return;
+    if (!window.matchMedia("(min-width: 768px)").matches) return;
+
+    var TRACO = {
+      v: "5.7.4", fr: 30, ip: 0, op: 76, w: 14, h: 34, nm: "role", ddd: 0, assets: [],
+      layers: [{
+        ddd: 0, ind: 1, ty: 4, nm: "l", sr: 1,
+        ks: { o: { a: 0, k: 100 }, r: { a: 0, k: 0 }, p: { a: 0, k: [7, 0, 0] },
+              a: { a: 0, k: [0, 0, 0] }, s: { a: 0, k: [100, 100, 100] } },
+        ao: 0,
+        shapes: [{ ty: "gr", nm: "g", np: 3, it: [
+          { ind: 0, ty: "sh", nm: "p", ks: { a: 0, k: {
+              i: [[0,0],[0,0]], o: [[0,0],[0,0]], v: [[0,0],[0,34]], c: false } } },
+          { ty: "st", nm: "s", c: { a: 0, k: [0.659, 0.333, 0.969, 1] },
+            o: { a: 0, k: 100 }, w: { a: 0, k: 2 }, lc: 1, lj: 1 },
+          { ty: "tm", nm: "t", m: 1, o: { a: 0, k: 0 },
+            s: { a: 1, k: [ { t: 10, s: [0], i: { x: [0.35], y: [1] }, o: { x: [0.65], y: [0] } },
+                            { t: 62, s: [100] } ] },
+            e: { a: 1, k: [ { t: 0,  s: [0], i: { x: [0.25], y: [1] }, o: { x: [0.75], y: [0] } },
+                            { t: 46, s: [100] } ] } },
+          { ty: "tr", p: { a: 0, k: [0,0] }, a: { a: 0, k: [0,0] },
+            s: { a: 0, k: [100,100] }, r: { a: 0, k: 0 }, o: { a: 0, k: 100 } }
+        ]}],
+        ip: 0, op: 76, st: 0
+      }]
+    };
+
+    function boot(){
+      if (typeof lottie === "undefined") return; /* mantém a seta SVG de reserva */
+      try {
+        lottie.loadAnimation({ container: host, renderer: "svg",
+          loop: true, autoplay: true, animationData: TRACO });
+        host.classList.add("on"); /* só então esconde o fallback */
+      } catch (e) {}
+    }
+    function fetchLib(){
+      var s = document.createElement("script");
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie_light.min.js";
+      s.async = true; s.onload = boot;
+      document.head.appendChild(s);
+    }
+    if (document.readyState === "complete") setTimeout(fetchLib, 500);
+    else window.addEventListener("load", function(){ setTimeout(fetchLib, 500); });
+  })();
 })();
 </script>
 </body>

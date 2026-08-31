@@ -293,6 +293,12 @@ section{padding-block:60px;position:relative}
 .frame--right .frame-scrim{
   background:linear-gradient(270deg,rgba(11,10,14,.84) 0%,rgba(11,10,14,.42) 44%,rgba(11,10,14,.08) 72%,rgba(11,10,14,.35) 100%);
 }
+/* Frame 04: a foto tem rótulos impressos (PAPEL, METAL) bem na zona do texto —
+   a cortina padrão não escurece o bastante ali. Cortina própria, mais funda e
+   mais larga, só para este frame; os demais frame--right não são afetados. */
+.frame[data-f="4"] .frame-scrim{
+  background:linear-gradient(270deg,rgba(11,10,14,.9) 0%,rgba(11,10,14,.74) 50%,rgba(11,10,14,.22) 78%,rgba(11,10,14,.5) 100%);
+}
 .frame-scrim::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,.55) 0%,transparent 20%,transparent 74%,rgba(11,10,14,.6) 100%);
@@ -2049,7 +2055,30 @@ button:focus-visible{
       mesh.rotation.x = 0.16 + Math.sin(t * 0.34) * 0.025;
       renderer.render(scene, camera);
     }
-    frame = requestAnimationFrame(render);
+    /* Liga/desliga o loop conforme a seção entra/sai da tela: sem isso a cena
+       renderiza pra sempre, mesmo com o usuário lendo o rodapé — GPU e bateria
+       gastas à toa. rootMargin dá uma folga de meia tela pra já estar girando
+       quando a seção chega. Reseta t0 ao religar pra não saltar no respiro. */
+    function startLoop(){
+      if (frame !== null) return;
+      t0 = (window.performance && performance.now) ? performance.now() : 0;
+      frame = requestAnimationFrame(render);
+    }
+    function stopLoop(){
+      if (frame === null) return;
+      cancelAnimationFrame(frame);
+      frame = null;
+    }
+    frame = null;
+    var io = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting) startLoop(); else stopLoop(); });
+      }, { rootMargin: "50% 0px" });
+      io.observe(inoxStage);
+    } else {
+      startLoop(); /* sem IO: mantém sempre ligado, como antes */
+    }
 
     function resize(){
       var nw = inoxStage.clientWidth, nh = inoxStage.clientHeight;
@@ -2062,7 +2091,8 @@ button:focus-visible{
     /* Descarte: página estática não desmonta, mas se o usuário ligar
        "movimento reduzido" no sistema a cena sai de cena por completo. */
     function destroy(){
-      cancelAnimationFrame(frame);
+      stopLoop();
+      if (io) io.disconnect();
       window.removeEventListener("resize", resize);
       if (st) st.kill();
       geo.dispose(); mat.dispose();

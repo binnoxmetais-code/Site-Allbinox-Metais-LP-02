@@ -18,10 +18,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.23/dist/lenis.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
-<script src="https://unpkg.com/split-type"></script>
+<script>
+/* Esconde só o que a entrada do hero anima, até o script principal assumir.
+   Sem JS a classe nunca entra (conteúdo visível); com CDN lento, sai em 3,5s. */
+document.documentElement.classList.add("preload");
+setTimeout(function(){ document.documentElement.classList.remove("preload"); }, 3500);
+</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+<script defer src="https://unpkg.com/split-type@0.3.4/umd/index.min.js"></script>
 
 <style>
 /* ============ TOKENS ============ */
@@ -174,6 +180,7 @@ section{padding-block:60px;position:relative}
 .hero-headline{font-weight:300;line-height:.98;letter-spacing:-.02em}
 .hero-mask{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.16em;padding-inline:.75em;margin-inline:-.75em}
 .hero-line{display:block;overflow:visible;will-change:transform}
+.preload .nav-inner,.preload .hero-line,.preload .hero-sub,.preload .hero-meta{visibility:hidden}
 .hero-l1{font-family:var(--font-body);font-weight:700;font-size:clamp(2.75rem,min(11vw,13vh),9.5rem);text-transform:uppercase;letter-spacing:-.03em}
 .hero-l2{font-family:var(--font-display);font-style:italic;font-weight:300;font-size:clamp(2.4rem,min(9.5vw,11vh),8.25rem);margin:.02em 0 .04em .04em}
 .hero-l3{font-family:var(--font-display);font-weight:300;font-size:clamp(1.8rem,min(6.4vw,7.2vh),5.5rem);color:var(--muted)}
@@ -238,7 +245,7 @@ section{padding-block:60px;position:relative}
    para #heroFrames o corte é invisível (mesma imagem por baixo). */
 .hero-photo-bg{
   position:absolute;inset:-1.5% -1.5% -1.5% -1.5%;z-index:0;
-  width:103%;height:103%;object-fit:cover;object-position:50% 72%;
+  width:103%;height:103%;object-fit:cover;object-position:0% 50%;
   will-change:transform;
 }
 .hero-photo-scrim{
@@ -248,6 +255,24 @@ section{padding-block:60px;position:relative}
 .hero-photo-scrim::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,.5) 0%,transparent 26%,transparent 78%,rgba(11,10,14,.65) 100%);
+}
+/* Mobile/tablet: tela em pé não comporta texto ao lado do produto. A foto vira
+   a faixa de cima (lixeira inteira, centralizada) e se dissolve no fundo; o
+   texto vem logo abaixo, sobre o escuro, sem disputar com o inox brilhante. */
+@media(max-width:1023px){
+  .hero{height:auto;min-height:100vh;min-height:100svh;padding-top:44vh;padding-top:44svh}
+  /* a foto some no próprio fundo (máscara), sem faixa de cor que denuncie a
+     emenda; o fade começa abaixo do pedal para a lixeira aparecer inteira */
+  .hero-photo-bg{
+    inset:0 0 auto 0;width:100%;height:48vh;height:48svh;object-position:55% 50%;
+    -webkit-mask-image:linear-gradient(180deg,#000 84%,transparent 100%);
+    mask-image:linear-gradient(180deg,#000 84%,transparent 100%);
+  }
+  .hero-photo-scrim{
+    inset:0 0 auto 0;height:48vh;height:48svh;
+    background:linear-gradient(180deg,rgba(11,10,14,.55) 0%,rgba(11,10,14,0) 24%);
+  }
+  .hero-photo-scrim::after{display:none}
 }
 
 /* Frames: fundos full-bleed com fotos reais trocando conforme o scroll */
@@ -261,12 +286,23 @@ section{padding-block:60px;position:relative}
   position:absolute;left:0;top:-1.5%;width:100%;height:103%;
   object-fit:cover;will-change:transform;
 }
-/* âncora do enquadramento no produto: o corte do cover acontece longe dele */
-.frame[data-f="1"] .frame-bg{object-position:50% 72%}
-.frame[data-f="2"] .frame-bg{object-position:50% 62%}
-.frame[data-f="3"] .frame-bg{object-position:50% 50%}
-.frame[data-f="4"] .frame-bg{object-position:50% 62%}
-.frame[data-f="5"] .frame-bg{object-position:50% 74%}
+/* âncora do enquadramento: o corte do cover cai do lado oposto ao produto,
+   empurrando-o para longe da coluna de texto */
+.frame[data-f="1"] .frame-bg{object-position:0% 50%}
+.frame[data-f="2"] .frame-bg{object-position:100% 50%}
+.frame[data-f="3"] .frame-bg{object-position:0% 50%}
+.frame[data-f="5"] .frame-bg{object-position:60% 50%}
+/* Frame 04: a foto da seletiva é 3:2 e os três cestos ocupam 75% da largura —
+   em cover eles iriam até a coluna de texto. Aqui a foto entra pela altura,
+   presa à esquerda, e se dissolve no escuro onde o texto mora. */
+.frame[data-f="4"]{background:var(--bg)}
+.frame[data-f="4"] .frame-bg{
+  top:auto;bottom:-1.5%;width:auto;height:94%;max-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 82%,transparent 99%),linear-gradient(180deg,transparent 0%,#000 16%);
+  -webkit-mask-composite:source-in;
+  mask-image:linear-gradient(90deg,#000 82%,transparent 99%),linear-gradient(180deg,transparent 0%,#000 16%);
+  mask-composite:intersect;
+}
 .frame-scrim{
   position:absolute;inset:0;
   background:linear-gradient(90deg,rgba(11,10,14,.84) 0%,rgba(11,10,14,.42) 44%,rgba(11,10,14,.08) 72%,rgba(11,10,14,.35) 100%);
@@ -274,22 +310,33 @@ section{padding-block:60px;position:relative}
 .frame--right .frame-scrim{
   background:linear-gradient(270deg,rgba(11,10,14,.84) 0%,rgba(11,10,14,.42) 44%,rgba(11,10,14,.08) 72%,rgba(11,10,14,.35) 100%);
 }
-/* Frame 04: a foto tem rótulos impressos (PAPEL, METAL) bem na zona do texto —
-   a cortina padrão não escurece o bastante ali. Cortina própria, mais funda e
-   mais larga, só para este frame; os demais frame--right não são afetados. */
-.frame[data-f="4"] .frame-scrim{
-  background:linear-gradient(270deg,rgba(11,10,14,.9) 0%,rgba(11,10,14,.74) 50%,rgba(11,10,14,.22) 78%,rgba(11,10,14,.5) 100%);
+/* coluna estreita à direita: cortina curta e funda, que não chega ao produto */
+.frame[data-f="2"] .frame-scrim,.frame[data-f="4"] .frame-scrim{
+  background:linear-gradient(270deg,rgba(11,10,14,.9) 0%,rgba(11,10,14,.68) 24%,rgba(11,10,14,.12) 42%,rgba(11,10,14,.24) 100%);
+}
+/* texto no alto à esquerda, acima das tampas: cortina vem do canto */
+.frame[data-f="3"] .frame-scrim,.frame[data-f="5"] .frame-scrim{
+  background:
+    radial-gradient(80% 72% at 0% 0%,rgba(11,10,14,.9) 0%,rgba(11,10,14,.62) 42%,rgba(11,10,14,0) 100%),
+    linear-gradient(90deg,rgba(11,10,14,.28) 0%,transparent 46%);
 }
 .frame-scrim::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(11,10,14,.55) 0%,transparent 20%,transparent 74%,rgba(11,10,14,.6) 100%);
 }
+/* Cada foto tem o produto num lugar — a coluna de texto se ajusta por frame
+   (lado, largura e altura) para nunca cobrir o que está sendo vendido. */
 .frame-copy{
-  position:absolute;top:50%;transform:translateY(-50%);
-  left:clamp(28px,6vw,110px);max-width:min(46vw,560px);
+  position:absolute;top:var(--copy-top,50%);transform:translateY(var(--copy-shift,-50%));
+  left:clamp(28px,6vw,110px);max-width:var(--copy-w,min(46vw,560px));
   display:flex;flex-direction:column;gap:clamp(10px,2.2vh,18px);
 }
-.frame--right .frame-copy{left:auto;right:clamp(28px,6vw,110px)}
+.frame--right .frame-copy{left:auto;right:var(--copy-right,clamp(28px,6vw,110px))}
+.frame[data-f="1"]{--copy-w:min(34vw,500px)}
+.frame[data-f="2"]{--copy-w:min(25vw,420px);--copy-right:clamp(28px,5vw,96px)}
+.frame[data-f="3"]{--copy-w:min(30vw,480px);--copy-top:clamp(92px,12vh,150px);--copy-shift:0}
+.frame[data-f="4"]{--copy-w:min(21vw,400px);--copy-right:clamp(28px,5vw,96px)}
+.frame[data-f="5"]{--copy-w:min(40vw,540px);--copy-top:clamp(92px,12vh,150px);--copy-shift:0}
 .fc-big{
   font-family:var(--font-body);font-weight:700;text-transform:uppercase;
   letter-spacing:-.02em;font-size:clamp(2.2rem,min(4.8vw,8vh),4.4rem);line-height:1.02;
@@ -298,6 +345,7 @@ section{padding-block:60px;position:relative}
   display:block;font-family:var(--font-display);font-weight:300;
   text-transform:none;letter-spacing:0;font-size:.9em;margin-top:.05em;
 }
+.frame[data-f="2"] .fc-big,.frame[data-f="3"] .fc-big,.frame[data-f="4"] .fc-big{font-size:clamp(2rem,min(3.6vw,6.4vh),3.4rem)}
 .fc-sub{
   color:var(--text);opacity:.85;font-size:clamp(.9375rem,1.2vw,1.0625rem);
   max-width:440px;text-shadow:0 1px 18px rgba(0,0,0,.55);
@@ -798,7 +846,7 @@ button:focus-visible{
 <!-- ============ HERO ============ -->
 <section class="hero" id="topo">
   <div class="hero-bg" aria-hidden="true"></div>
-  <img class="hero-photo-bg" id="heroPhotoBg" src="assets/frame-1.jpg" alt="Lixeira de pedal em aço inox polido em cozinha de alto padrão" fetchpriority="high" decoding="async">
+  <img class="hero-photo-bg" id="heroPhotoBg" src="assets/hero-cozinha.jpg" width="1408" height="792" alt="Lixeira de pedal em aço inox polido em cozinha com ilha" fetchpriority="high" decoding="async">
   <div class="hero-photo-scrim" id="heroPhotoScrim" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-grid">
@@ -834,7 +882,7 @@ button:focus-visible{
 
   <div class="hero-frames" id="heroFrames" aria-hidden="true">
     <div class="frame" data-f="1">
-      <img class="frame-bg" src="assets/frame-1.jpg" alt="" loading="lazy" decoding="async">
+      <img class="frame-bg" src="assets/hero-cozinha.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
         <p class="label fc-item"><span class="paren">(</span>&nbsp;01 · Lixeiras Inox&nbsp;<span class="paren">)</span></p>
@@ -844,17 +892,17 @@ button:focus-visible{
       </div>
     </div>
     <div class="frame frame--right" data-f="2">
-      <img class="frame-bg" src="assets/frame-pedal.jpg" alt="" loading="lazy" decoding="async">
+      <img class="frame-bg" src="assets/hero-clinica.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
-        <p class="label fc-item"><span class="paren">(</span>&nbsp;02 · Linha Pedal&nbsp;<span class="paren">)</span></p>
-        <h3 class="fc-big fc-item"><span class="chrome-text">Pedal</span><em class="serif-i violet-text">sem contato</em></h3>
-        <p class="fc-sub fc-item">Acionamento sem toque, do lavabo à cozinha — a família completa de volumes.</p>
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;02 · Pedal com Rodízio&nbsp;<span class="paren">)</span></p>
+        <h3 class="fc-big fc-item"><span class="chrome-text">Pedal</span><em class="serif-i violet-text">que circula</em></h3>
+        <p class="fc-sub fc-item">Alça e rodízios levam a lixeira de sala em sala. 18 modelos, de 40 a 120 litros, para clínicas e cozinhas.</p>
         <span class="fc-rule fc-item" aria-hidden="true"></span>
       </div>
     </div>
     <div class="frame" data-f="3">
-      <img class="frame-bg" src="assets/frame-basculante.jpg" alt="" loading="lazy" decoding="async">
+      <img class="frame-bg" src="assets/hero-basculante.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
         <p class="label fc-item"><span class="paren">(</span>&nbsp;03 · Linha Basculante&nbsp;<span class="paren">)</span></p>
@@ -864,7 +912,7 @@ button:focus-visible{
       </div>
     </div>
     <div class="frame frame--right" data-f="4">
-      <img class="frame-bg" src="assets/frame-2.jpg" alt="" loading="lazy" decoding="async">
+      <img class="frame-bg" src="assets/hero-seletiva.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
         <p class="label fc-item"><span class="paren">(</span>&nbsp;04 · Coleta Seletiva&nbsp;<span class="paren">)</span></p>
@@ -874,12 +922,12 @@ button:focus-visible{
       </div>
     </div>
     <div class="frame" data-f="5">
-      <img class="frame-bg" src="assets/frame-3.jpg" alt="" loading="lazy" decoding="async">
+      <img class="frame-bg" src="assets/hero-meialua.jpg" alt="" loading="lazy" decoding="async">
       <div class="frame-scrim" aria-hidden="true"></div>
       <div class="frame-copy">
-        <p class="label fc-item"><span class="paren">(</span>&nbsp;05 · Linha Externa&nbsp;<span class="paren">)</span></p>
-        <h3 class="fc-big fc-item"><span class="chrome-text">Inox</span><em class="serif-i violet-text">a céu aberto</em></h3>
-        <p class="fc-sub fc-item">Meia-lua, externas e bituqueiras para as áreas de convivência.</p>
+        <p class="label fc-item"><span class="paren">(</span>&nbsp;05 · Tampa Meia-Lua&nbsp;<span class="paren">)</span></p>
+        <h3 class="fc-big fc-item"><span class="chrome-text">Inox</span><em class="serif-i violet-text">que recebe</em></h3>
+        <p class="fc-sub fc-item">Tampa meia-lua para recepções, lounges e halls. 17 modelos, de 13 a 120 litros.</p>
         <span class="fc-rule fc-item" aria-hidden="true"></span>
       </div>
     </div>
@@ -1130,16 +1178,16 @@ button:focus-visible{
     <div class="rail-track" id="railTrack">
       <figure class="rail-card"><img src="assets/galeria/lix-1.jpg" alt="Lixeira em aço inox de linha" loading="lazy" decoding="async"><figcaption><b>Lixeira inox</b><span>/ 01</span></figcaption></figure>
       <figure class="rail-card"><img src="assets/galeria/sel-1.jpg" alt="Coleta seletiva em aço inox" loading="lazy" decoding="async"><figcaption><b>Coleta seletiva</b><span>/ 02</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/lix-3.jpg" alt="Lixeira com pedal em aço inox" loading="lazy" decoding="async"><figcaption><b>Pedal</b><span>/ 03</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/bit-1.jpg" alt="Bituqueira em aço inox" loading="lazy" decoding="async"><figcaption><b>Bituqueira</b><span>/ 04</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/uti-2.jpg" alt="Utilitário em aço inox" loading="lazy" decoding="async"><figcaption><b>Utilitário</b><span>/ 05</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/sel-4.jpg" alt="Conjunto de coleta seletiva" loading="lazy" decoding="async"><figcaption><b>Conjunto seletiva</b><span>/ 06</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/lix-6.jpg" alt="Lixeira de grande capacidade em aço inox" loading="lazy" decoding="async"><figcaption><b>Grande volume</b><span>/ 07</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/bit-3.jpg" alt="Bituqueira de parede em aço inox" loading="lazy" decoding="async"><figcaption><b>Bituqueira</b><span>/ 08</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/uti-4.jpg" alt="Porta guarda-chuvas em aço inox" loading="lazy" decoding="async"><figcaption><b>Guarda-chuvas</b><span>/ 09</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/lix-5.jpg" alt="Lixeira quadrada em aço inox" loading="lazy" decoding="async"><figcaption><b>Quadrada</b><span>/ 10</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-3.jpg" alt="Lixeiras com aro em aço inox em banheiro de mármore" loading="lazy" decoding="async"><figcaption><b>Lixeiras com aro</b><span>/ 03</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/bit-1.jpg" alt="Bituqueira com cinzeiro em aço inox em área de convivência" loading="lazy" decoding="async"><figcaption><b>Bituqueira</b><span>/ 04</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-2.jpg" alt="Porta guarda-chuvas em aço inox em hall corporativo" loading="lazy" decoding="async"><figcaption><b>Porta guarda-chuvas</b><span>/ 05</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/sel-4.jpg" alt="Conjunto de coleta seletiva quadrada em área externa" loading="lazy" decoding="async"><figcaption><b>Conjunto seletiva</b><span>/ 06</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-6.jpg" alt="Lixeira meia-lua em aço inox em varanda" loading="lazy" decoding="async"><figcaption><b>Meia-lua</b><span>/ 07</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/bit-3.jpg" alt="Lixeira cinzeiro em aço inox em praça" loading="lazy" decoding="async"><figcaption><b>Lixeira cinzeiro</b><span>/ 08</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-4.jpg" alt="Placa sinalizadora de piso molhado em aço inox" loading="lazy" decoding="async"><figcaption><b>Piso molhado</b><span>/ 09</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/lix-5.jpg" alt="Família de lixeiras de pedal em aço inox" loading="lazy" decoding="async"><figcaption><b>Linha pedal</b><span>/ 10</span></figcaption></figure>
       <figure class="rail-card"><img src="assets/galeria/sel-5.jpg" alt="Coleta seletiva com identificação por cores" loading="lazy" decoding="async"><figcaption><b>Identificação</b><span>/ 11</span></figcaption></figure>
-      <figure class="rail-card"><img src="assets/galeria/uti-5.jpg" alt="Coletor de pilhas em aço inox" loading="lazy" decoding="async"><figcaption><b>Coletor de pilhas</b><span>/ 12</span></figcaption></figure>
+      <figure class="rail-card"><img src="assets/galeria/uti-5.jpg" alt="Conjunto de porta guarda-chuvas e placa sinalizadora em aço inox" loading="lazy" decoding="async"><figcaption><b>Conjunto segurança</b><span>/ 12</span></figcaption></figure>
     </div>
   </div>
   <div class="rail-progress" aria-hidden="true"><i id="railBar"></i></div>
@@ -1438,7 +1486,9 @@ button:focus-visible{
 </a>
 
 <script>
-(function(){
+/* As libs do <head> usam defer (não bloqueiam a primeira pintura) e executam
+   antes do DOMContentLoaded — por isso o script inteiro espera esse evento. */
+document.addEventListener("DOMContentLoaded", function(){
   "use strict";
 
   var isMobile = window.matchMedia("(max-width: 768px)").matches || "ontouchstart" in window;
@@ -1559,11 +1609,12 @@ button:focus-visible{
       stagger: 0.1, ease: "expo.out", delay: 0.12
     });
     gsap.from(".hero-sub > *", { y: 30, opacity: 0, duration: 0.9, stagger: 0.12, delay: 0.55, ease: "power3.out" });
-    gsap.from("#heroPhotoBg", { scale: 1.12, opacity: 0, duration: 1.6, delay: 0.15, ease: "power2.out" });
-    gsap.from("#heroPhotoScrim", { opacity: 0, duration: 1.3, delay: 0.15, ease: "power2.out" });
     gsap.from(".hero-meta", { opacity: 0, y: 20, duration: 0.8, delay: 0.9, ease: "power3.out" });
     gsap.from(".nav-inner", { y: -24, opacity: 0, duration: 0.9, delay: 0.1, ease: "power3.out" });
   }
+  // A foto de fundo não tem entrada: ela é o palco e pinta já no primeiro frame (LCP).
+  // Os estados iniciais acima já foram aplicados neste mesmo tick — liberar é seguro.
+  document.documentElement.classList.remove("preload");
 
   // ---------- HERO: scrollytelling (pin + scrub em 3 cenas) ----------
   // Criado no mesmo tick que o pin do manifesto (ordem de documento) para o
@@ -2193,7 +2244,7 @@ button:focus-visible{
     if (document.readyState === "complete") setTimeout(fetchLib, 500);
     else window.addEventListener("load", function(){ setTimeout(fetchLib, 500); });
   })();
-})();
+});
 </script>
 </body>
 </html>

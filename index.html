@@ -597,6 +597,11 @@ section{padding-block:60px;position:relative}
 .vit-card figcaption span{
   color:var(--muted);font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
 }
+/* 2 colunas no celular: nome e ambiente empilham, senão o ambiente vaza do card */
+@media(max-width:699px){
+  .vit-card figcaption{flex-direction:column;align-items:flex-start;gap:3px;padding:32px 12px 12px}
+  .vit-card figcaption span{white-space:normal}
+}
 .vit-foot{
   display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;
   margin-top:40px;padding-top:24px;border-top:1px solid var(--border);
@@ -646,6 +651,29 @@ section{padding-block:60px;position:relative}
 }
 .chip:hover{border-color:var(--violet-light)}
 .seg-side .btn{align-self:flex-start;margin-top:8px}
+/* cena do segmento no topo do card lateral, encostada nas bordas do card */
+.seg-photo{
+  margin:-32px -32px 4px;aspect-ratio:16/10;overflow:hidden;
+  border-radius:19px 19px 0 0;border-bottom:1px solid var(--border);
+}
+.seg-photo img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* ============ EM USO (fotos reais, feitas no local) ============ */
+.uso{border-top:1px solid var(--border)}
+.uso-head{display:flex;flex-direction:column;gap:16px;margin-bottom:48px}
+.uso-sub{color:var(--muted);max-width:560px}
+.uso-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:700px){.uso-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1100px){.uso-grid{grid-template-columns:repeat(6,1fr)}}
+.uso-card{position:relative;margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--border);aspect-ratio:3/4}
+.uso-card img{width:100%;height:100%;object-fit:cover;display:block}
+.uso-card figcaption{
+  position:absolute;inset-inline:0;bottom:0;padding:40px 14px 12px;
+  background:linear-gradient(180deg,transparent 0%,rgba(11,10,14,.84) 76%);
+  display:flex;flex-direction:column;gap:3px;
+}
+.uso-card figcaption b{color:var(--text);font-weight:500;font-size:.8125rem;letter-spacing:.01em}
+.uso-card figcaption span{color:var(--muted);font-size:.6875rem;letter-spacing:.12em;text-transform:uppercase}
 
 /* ============ MARCA / SHOWROOM ============ */
 .brand-section{overflow:hidden}
@@ -1050,10 +1078,10 @@ button:focus-visible{
     </div>
 
     <div class="line-thumbs" aria-hidden="false">
-      <figure><img src="assets/prev-lixeiras.jpg" alt="Lixeira de pedal em escritório" loading="lazy" decoding="async" width="720" height="960"><figcaption>Lixeiras Inox</figcaption></figure>
-      <figure><img src="assets/prev-seletiva.jpg" alt="Conjunto de coleta seletiva em praça de alimentação" loading="lazy" decoding="async" width="720" height="960"><figcaption>Coleta Seletiva</figcaption></figure>
-      <figure><img src="assets/prev-bituqueiras.jpg" alt="Bituqueira pedestal em calçada de centro comercial" loading="lazy" decoding="async" width="720" height="960"><figcaption>Bituqueiras</figcaption></figure>
-      <figure><img src="assets/prev-utilitarios.jpg" alt="Porta guarda-chuvas em hotel" loading="lazy" decoding="async" width="720" height="960"><figcaption>Utilitários</figcaption></figure>
+      <figure><img src="assets/prev-lixeiras.jpg" alt="Lixeira de pedal em aço inox em hall de shopping" loading="lazy" decoding="async" width="720" height="960"><figcaption>Lixeiras Inox</figcaption></figure>
+      <figure><img src="assets/prev-seletiva.jpg" alt="Lixeiras de coleta seletiva para plástico e papel em lobby" loading="lazy" decoding="async" width="594" height="792"><figcaption>Coleta Seletiva</figcaption></figure>
+      <figure><img src="assets/prev-bituqueiras.jpg" alt="Lixeira cinzeiro em aço inox na entrada de restaurante" loading="lazy" decoding="async" width="720" height="960"><figcaption>Bituqueiras</figcaption></figure>
+      <figure><img src="assets/prev-utilitarios.jpg" alt="Porta guarda-chuvas em aço inox com guarda-chuvas em recepção" loading="lazy" decoding="async" width="720" height="960"><figcaption>Utilitários</figcaption></figure>
     </div>
   </div>
 </section>
@@ -1076,28 +1104,44 @@ button:focus-visible{
 
     <div class="vit-grid" id="vitGrid">
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-1.jpg" alt="Lixeira inox em cozinha com ilha de mármore" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Lixeira inox</b><span>Cozinha</span></figcaption>
+        <img src="assets/vitrine/pedal.jpg" alt="Lixeira de pedal em aço inox em banheiro com bancada de madeira" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Pedal</b><span>Banheiro</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-2.jpg" alt="Lixeira de pedal em escritório" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Lixeira pedal</b><span>Escritório</span></figcaption>
+        <img src="assets/vitrine/pedal-alca.jpg" alt="Lixeira de pedal com alças em cozinha profissional" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Pedal com alças</b><span>Cozinha</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-3.jpg" alt="Lixeiras com aro em banheiro de mármore" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Lixeiras com aro</b><span>Banheiro</span></figcaption>
+        <img src="assets/vitrine/pedal-rodizio.jpg" alt="Lixeira de pedal com rodízios em corredor" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Pedal com rodízios</b><span>Corredor</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-4.jpg" alt="Lixeira de pedal com alças em corredor de shopping" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Pedal com alças</b><span>Shopping</span></figcaption>
+        <img src="assets/vitrine/aro.jpg" alt="Lixeira com aro em aço inox em lobby de hotel" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Com aro</b><span>Hotel</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-5.jpg" alt="Família de lixeiras de pedal em vários tamanhos" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Linha pedal</b><span>Família completa</span></figcaption>
+        <img src="assets/vitrine/basculante.jpg" alt="Lixeira basculante em aço inox em sala com piso de madeira" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Basculante</b><span>Sala</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/lix-6.jpg" alt="Lixeira meia-lua em varanda à noite" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Meia-lua</b><span>Área externa</span></figcaption>
+        <img src="assets/vitrine/meia-lua.jpg" alt="Lixeira meia-lua ao lado de aparador em recepção" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Meia-lua</b><span>Recepção</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/vitrine/quadrada-aro.jpg" alt="Lixeira quadrada com aro em escritório" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Quadrada com aro</b><span>Escritório</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/vitrine/quadrada-basculante.jpg" alt="Lixeira quadrada basculante em loja" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Quadrada basculante</b><span>Loja</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/vitrine/sem-tampa.jpg" alt="Lixeira sem tampa em aço inox em hall de mármore" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Sem tampa</b><span>Hall</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/vitrine/embutir.jpg" alt="Lixeira de embutir em bancada de cozinha" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>De embutir</b><span>Bancada</span></figcaption>
       </a>
       <a class="vit-card" data-cat="lixeiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20a%20linha%20de%20LIXEIRAS%20INOX%20da%20ALLBINOX." target="_blank" rel="noopener">
         <img src="assets/galeria/bit-2.jpg" alt="Lixeira externa basculante na calçada de centro comercial" loading="lazy" decoding="async" width="800" height="800">
@@ -1126,8 +1170,12 @@ button:focus-visible{
       </a>
 
       <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/bit-1.jpg" alt="Bituqueira com cinzeiro em área de café" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Bituqueira cinzeiro</b><span>Convivência</span></figcaption>
+        <img src="assets/vitrine/cinzeiro-bar.jpg" alt="Lixeira cinzeiro em aço inox na entrada de bar" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira cinzeiro</b><span>Bar</span></figcaption>
+      </a>
+      <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
+        <img src="assets/vitrine/cinzeiro-varanda.jpg" alt="Lixeira cinzeiro em aço inox em varanda corporativa" loading="lazy" decoding="async" width="800" height="800">
+        <figcaption><b>Lixeira cinzeiro</b><span>Varanda</span></figcaption>
       </a>
       <a class="vit-card" data-cat="bituqueiras" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20as%20BITUQUEIRAS%20da%20ALLBINOX." target="_blank" rel="noopener">
         <img src="assets/galeria/bit-3.jpg" alt="Lixeira cinzeiro em praça externa" loading="lazy" decoding="async" width="800" height="800">
@@ -1139,12 +1187,8 @@ button:focus-visible{
       </a>
 
       <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/uti-1.jpg" alt="Porta guarda-chuvas em lobby de hotel" loading="lazy" decoding="async" width="800" height="800">
+        <img src="assets/vitrine/guarda-chuva.jpg" alt="Porta guarda-chuvas em aço inox na entrada de hotel" loading="lazy" decoding="async" width="800" height="800">
         <figcaption><b>Porta guarda-chuvas</b><span>Hotelaria</span></figcaption>
-      </a>
-      <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
-        <img src="assets/galeria/uti-2.jpg" alt="Porta guarda-chuvas em hall corporativo" loading="lazy" decoding="async" width="800" height="800">
-        <figcaption><b>Porta guarda-chuvas</b><span>Hall</span></figcaption>
       </a>
       <a class="vit-card" data-cat="utilitarios" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20conhecer%20os%20UTILIT%C3%81RIOS%20em%20inox%20da%20ALLBINOX." target="_blank" rel="noopener">
         <img src="assets/galeria/uti-3.jpg" alt="Coletor de pilhas e baterias em escola" loading="lazy" decoding="async" width="800" height="800">
@@ -1162,7 +1206,7 @@ button:focus-visible{
     </div>
 
     <div class="vit-foot">
-      <p>Estas são algumas aplicações reais das nossas linhas. O portfólio completo — com medidas, capacidades e acabamentos — está no catálogo 2026.</p>
+      <p>Uma amostra das linhas em ambiente. O portfólio completo — com medidas, capacidades e acabamentos — está no catálogo 2026.</p>
       <a class="btn btn-ghost" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Quero%20receber%20o%20cat%C3%A1logo%20ALLBINOX%202026." target="_blank" rel="noopener">Receber o catálogo completo</a>
     </div>
   </div>
@@ -1220,6 +1264,7 @@ button:focus-visible{
         </ul>
       </div>
       <aside class="seg-side">
+        <figure class="seg-photo"><img src="assets/seg/seg-revenda.jpg" alt="Família de lixeiras basculantes em três alturas em hall corporativo" loading="lazy" decoding="async" width="1000" height="625"></figure>
         <span class="label">Linhas recomendadas</span>
         <div class="seg-side-lines">
           <span class="chip">Lixeiras Pedal</span><span class="chip">Com Aro</span><span class="chip">Coleta Seletiva</span><span class="chip">Utilitários</span>
@@ -1239,6 +1284,7 @@ button:focus-visible{
         </ul>
       </div>
       <aside class="seg-side">
+        <figure class="seg-photo"><img src="assets/seg/seg-facilities.jpg" alt="Lixeira quadrada em aço inox em hall de elevadores" loading="lazy" decoding="async" width="1000" height="625"></figure>
         <span class="label">Linhas recomendadas</span>
         <div class="seg-side-lines">
           <span class="chip">Basculantes</span><span class="chip">Coleta Seletiva</span><span class="chip">Linha Externa</span><span class="chip">Porta Guarda-Chuvas</span>
@@ -1258,6 +1304,7 @@ button:focus-visible{
         </ul>
       </div>
       <aside class="seg-side">
+        <figure class="seg-photo"><img src="assets/seg/seg-hotelaria.jpg" alt="Lixeira basculante em aço inox na recepção de hotel" loading="lazy" decoding="async" width="1000" height="625"></figure>
         <span class="label">Linhas recomendadas</span>
         <div class="seg-side-lines">
           <span class="chip">Pedal Redonda</span><span class="chip">Quadrada Aro</span><span class="chip">Bituqueiras</span><span class="chip">Linha Externa</span>
@@ -1277,6 +1324,7 @@ button:focus-visible{
         </ul>
       </div>
       <aside class="seg-side">
+        <figure class="seg-photo"><img src="assets/seg/seg-saude.jpg" alt="Lixeira de pedal em aço inox na recepção de clínica" loading="lazy" decoding="async" width="1000" height="625"></figure>
         <span class="label">Linhas recomendadas</span>
         <div class="seg-side-lines">
           <span class="chip">Pedal</span><span class="chip">Pedal + Rodízios</span><span class="chip">Coleta Seletiva</span><span class="chip">Coletor de Pilhas</span>
@@ -1296,12 +1344,32 @@ button:focus-visible{
         </ul>
       </div>
       <aside class="seg-side">
+        <figure class="seg-photo"><img src="assets/seg/seg-industria.jpg" alt="Três lixeiras de pedal com rodízios e equipe uniformizada" loading="lazy" decoding="async" width="1000" height="625"></figure>
         <span class="label">Linhas recomendadas</span>
         <div class="seg-side-lines">
           <span class="chip">Pedal + Rodízios + Alças</span><span class="chip">Externa</span><span class="chip">Porta Extintor</span><span class="chip">Conjuntos Seletiva</span>
         </div>
         <a class="btn btn-primary" href="https://wa.me/5511978791851?text=Ol%C3%A1!%20Sou%20da%20%C3%A1rea%20industrial%2Fcorporativa%20e%20quero%20cota%C3%A7%C3%A3o%20ALLBINOX." target="_blank" rel="noopener">Cotar para minha operação</a>
       </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EM USO (fotos reais) ============ -->
+<section class="uso" id="em-uso">
+  <div class="container">
+    <div class="uso-head">
+      <p class="label"><span class="paren">(</span>&nbsp;Em uso&nbsp;<span class="paren">)</span></p>
+      <h2 class="section-title">Instalado, <em class="serif-i violet-text">no dia a dia</em></h2>
+      <p class="uso-sub">Fotos reais, feitas no local, de produtos ALLBINOX em jardins, corredores, salas de atendimento e recepções.</p>
+    </div>
+    <div class="uso-grid">
+      <figure class="uso-card"><img src="assets/uso/uso-bituqueira.jpg" alt="Bituqueira pedestal em aço inox em jardim de entrada" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Bituqueira pedestal</b><span>Jardim</span></figcaption></figure>
+      <figure class="uso-card"><img src="assets/uso/uso-extintor.jpg" alt="Dois porta extintores em aço inox com extintores em corredor" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Porta extintor</b><span>Corredor</span></figcaption></figure>
+      <figure class="uso-card"><img src="assets/uso/uso-piso.jpg" alt="Placa de piso molhado em aço inox em área de circulação" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Piso molhado</b><span>Circulação</span></figcaption></figure>
+      <figure class="uso-card"><img src="assets/uso/uso-pedal.jpg" alt="Lixeira de pedal em aço inox em sala de atendimento" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Lixeira pedal</b><span>Atendimento</span></figcaption></figure>
+      <figure class="uso-card"><img src="assets/uso/uso-basculante.jpg" alt="Lixeira basculante em aço inox ao lado de sofá em sala de espera" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Lixeira basculante</b><span>Sala de espera</span></figcaption></figure>
+      <figure class="uso-card"><img src="assets/uso/uso-pedal-sala.jpg" alt="Lixeira de pedal em aço inox em sala de procedimentos" loading="lazy" decoding="async" width="900" height="1200"><figcaption><b>Lixeira pedal</b><span>Procedimentos</span></figcaption></figure>
     </div>
   </div>
 </section>
@@ -1768,7 +1836,7 @@ document.addEventListener("DOMContentLoaded", function(){
   // ---------- REVEAL staggered por seção ----------
   if (hasST && !reduceMotion) {
     if (typeof ScrollTrigger.batch === "function") {
-      ScrollTrigger.batch(".vit-card", {
+      ScrollTrigger.batch(".vit-card, .uso-card", {
         start: "top 92%",
         once: true,
         onEnter: function(els){
@@ -1776,7 +1844,7 @@ document.addEventListener("DOMContentLoaded", function(){
         }
       });
     }
-    gsap.utils.toArray(".numbers-head, .section-head, .seg-head, .vit-head, .vit-foot, .wall-head, .cta-left, .quote-card, .footer-thanks").forEach(function(block){
+    gsap.utils.toArray(".numbers-head, .section-head, .seg-head, .vit-head, .vit-foot, .uso-head, .wall-head, .cta-left, .quote-card, .footer-thanks").forEach(function(block){
       gsap.from(block, {
         opacity: 0, y: 40, duration: 0.9, ease: "power3.out",
         scrollTrigger: { trigger: block, start: "top 86%", toggleActions: "play none none none" }
@@ -1899,6 +1967,20 @@ document.addEventListener("DOMContentLoaded", function(){
   // ---------- SEGMENTOS: tabs ----------
   var segTabs = document.querySelectorAll(".seg-tab");
   var segPanels = document.querySelectorAll(".seg-panel");
+  // As cenas dos painéis ocultos são lazy e só carregariam no clique (foto
+  // surgindo depois do painel). Na primeira intenção de uso das abas, puxa todas.
+  var segTabsBar = document.querySelector(".seg-tabs");
+  if (segTabsBar) {
+    var warmSeg = function(){
+      document.querySelectorAll(".seg-photo img").forEach(function(im){ im.loading = "eager"; });
+      segTabsBar.removeEventListener("pointerenter", warmSeg);
+      segTabsBar.removeEventListener("focusin", warmSeg);
+      segTabsBar.removeEventListener("touchstart", warmSeg);
+    };
+    segTabsBar.addEventListener("pointerenter", warmSeg);
+    segTabsBar.addEventListener("focusin", warmSeg);
+    segTabsBar.addEventListener("touchstart", warmSeg, { passive: true });
+  }
   segTabs.forEach(function(tab){
     tab.addEventListener("click", function(){
       var key = tab.getAttribute("data-seg");
